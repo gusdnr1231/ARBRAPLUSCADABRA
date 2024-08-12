@@ -292,7 +292,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TileContainer: {fileID: 1092924878}
   TileObject: {fileID: 8332547858181540487, guid: 890d19a22a89c914cbdc9577bdfdc99a, type: 3}
-  StartPosition: {x: -6, y: 0}
+  StartPosition: {x: 0, y: 3}
   MapSize: 7
 --- !u!1 &1092924877
 GameObject:
@@ -342,7 +342,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &2082348811
 SpriteRenderer:
   m_ObjectHideFlags: 0

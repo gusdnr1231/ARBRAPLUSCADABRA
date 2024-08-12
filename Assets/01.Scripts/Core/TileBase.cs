@@ -44,6 +44,11 @@ public class TileBase : MonoBehaviour
 		M_TileData.InstanceTileState = InitState;
 	}
 
+    public void SetTileAnimation()
+    {
+		TIleAnimator.SetTrigger("Disappear");
+	}
+
     public Vector3 ReturnTilePosition()
     {
         return this.transform.position;
