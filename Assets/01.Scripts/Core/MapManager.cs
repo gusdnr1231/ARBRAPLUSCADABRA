@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,7 @@ public class MapManager : MonoSingleton<MapManager>
 	[SerializeField] private int MapSize = 7;
 
 	public Dictionary<Vector2Int, TileBase> SettedTiles = new Dictionary<Vector2Int, TileBase>();
-
+	public static Action OnCompleteLoadingMap;
 	private void Start()
 	{
 		StartCoroutine(SetMapTile());
@@ -48,6 +49,8 @@ public class MapManager : MonoSingleton<MapManager>
 				yield return new WaitForSeconds(0.01f);
 			}
 		}
+
+		OnCompleteLoadingMap?.Invoke();
 	}
 
 	private IEnumerator UnSetMapTile()
