@@ -19,5 +19,14 @@ public class PRS
 
 public class Utils
 {
-	
+	public static Vector3 MousePosition
+	{
+		get
+		{
+			Vector3 result = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			result.z = -10f;
+
+			return result;
+		}
+	}
 }

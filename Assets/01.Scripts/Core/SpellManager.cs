@@ -1,13 +1,18 @@
+using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SpellManager : MonoSingleton<SpellManager>
 {
-	[Header("Card Datas")]
+	[Header("Scroll Datas")]
 	[SerializeField] private Scroll CardPrefab;
 	[SerializeField][Range(0.1f, 2f)] private float CardSize = 1f;
+	[SerializeField][Range(1f, 3f)] private float EnLargeCardSize = 2f;
+	[SerializeField][Range(0f, 1f)] private float CardMoveDuration = 0.3f;
 
 	[Header("Transforms")]
 	[SerializeField] private Transform CardSpawnPosition;
@@ -15,7 +20,10 @@ public class SpellManager : MonoSingleton<SpellManager>
 	[SerializeField] private Transform HighSpellBottom;
 	[SerializeField] private Transform LowSpellTop;
 	[SerializeField] private Transform LowSpellBottom;
-	
+
+	[Header("Using Scroll Values")]
+	[SerializeField] private LayerMask ExceptionLayer;
+
 	[Header("Spell Datas")]
 	public List<MonoSpellBase> PlayerDeck = new List<MonoSpellBase>();
 	public List<Scroll> LowSpellHand = new List<Scroll>();
@@ -24,11 +32,15 @@ public class SpellManager : MonoSingleton<SpellManager>
 	public LowSpellBase UsedLowSpell { get; set; }
 	public HighSpellBase UsedHighSpell { get; set; }
 
+	private Scroll SelectedScroll = null;
+
+	private bool isScrollDraging = false;
+	private bool onPlayerScrollZone = false;
+
 	private void Start()
 	{
 		ClearPlayerHand();
 	}
-
 
 	private void Update()
 	{
@@ -36,6 +48,28 @@ public class SpellManager : MonoSingleton<SpellManager>
 		{
 			AddCard();
 		}
+
+		if(isScrollDraging)
+		{
+			ScrollDrag();
+		}
+
+		DetectCardArea();
+	}
+
+	private void ScrollDrag()
+	{
+		if(onPlayerScrollZone == false)
+		{
+			SelectedScroll.MoveScrollTransform(new PRS(Utils.MousePosition, Quaternion.identity, SelectedScroll.originPRS.Scale), false);
+		}
+	}
+
+	private void DetectCardArea()
+	{
+		RaycastHit2D[] hits = Physics2D.RaycastAll(Utils.MousePosition, Vector3.forward);
+		int exceptionLayer = ExceptionLayer;
+		onPlayerScrollZone = Array.Exists(hits, x => x.collider.gameObject.layer == exceptionLayer);
 	}
 
 	public string SpellSentence()
@@ -49,7 +83,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 		return sentence.ToString();
 	}
 
-
+	#region Player Hand Methods
 
 	public void ClearPlayerHand()
 	{
@@ -83,10 +117,24 @@ public class SpellManager : MonoSingleton<SpellManager>
 				default: break;	
 		}
 
+		SetSortingOrder(InitSpellType);
 		CardAlignment(InitSpellType);
 	}
 
+	#endregion
+
 	#region Card Alignment Methods
+
+	private void SetSortingOrder(SpellTypeEnum initSpellType)
+	{
+		int HandCount = initSpellType == SpellTypeEnum.Low ? LowSpellHand.Count : HighSpellHand.Count;
+		
+		for (int forCount = 0; forCount < HandCount; forCount++)
+		{
+			Scroll targetCard = initSpellType == SpellTypeEnum.Low ? LowSpellHand[forCount] : HighSpellHand[forCount];
+			targetCard?.GetComponent<Order>().SetOriginOrder(forCount);
+		}
+	}
 
 	private void CardAlignment(SpellTypeEnum InitSpellType)
 	{
@@ -107,7 +155,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 			Scroll targetCard = targetHands[count];
 
 			targetCard.originPRS = originCardPRSs[count];
-			targetCard.MoveCartTransform(targetCard.originPRS, true, 0.7f);
+			targetCard.MoveScrollTransform(targetCard.originPRS, true, CardMoveDuration);
 		}
 	}
 
@@ -145,6 +193,46 @@ public class SpellManager : MonoSingleton<SpellManager>
 		}
 
 		return results;
+	}
+
+	#endregion
+
+	#region Select Card
+
+	public void ScrollMouseOver(Scroll initScroll)
+	{
+		SelectedScroll = initScroll;
+		EnLargeCard(true, initScroll);
+	}
+
+	public void ScrollMouseExit(Scroll initScroll)
+	{
+		EnLargeCard(false, initScroll);
+	}
+
+	public void ScrollMouseUp()
+	{
+		isScrollDraging = false;
+	}
+
+	public void ScrollMouseDown()
+	{
+		isScrollDraging = true;
+	}
+
+	private void EnLargeCard(bool isEnLarge, Scroll initScroll)
+	{
+		if (isEnLarge == true)
+		{
+			Vector3 enlargePos = new Vector3(initScroll.originPRS.Position.x, -3f, -10f);
+			initScroll.MoveScrollTransform(new PRS(enlargePos, Quaternion.identity, Vector3.one * EnLargeCardSize), false);
+		}
+		else if(isEnLarge == false)
+		{
+			initScroll.MoveScrollTransform(initScroll.originPRS, false);
+		}
+
+		initScroll.GetComponent<Order>().SetMostFrontOrder(isEnLarge);
 	}
 
 	#endregion

@@ -1,13 +1,19 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Scroll : MonoBehaviour
 {
-    public MonoSpellBase ScrollSpellData { get; set; }
+    
+    [Header("Scroll Infomation Objects")]
+    [SerializeField] private TMP_Text SpellName;
 
+    [Header("Scroll Transform Datas")]
     public PRS originPRS;
+
+    public MonoSpellBase ScrollSpellData { get; set; }
 
     public void InitSpellData(MonoSpellBase InitData)
     {
@@ -23,9 +29,11 @@ public class Scroll : MonoBehaviour
             default:
                 break;
         }
+
+		SpellName.text = InitData.SpellName;
 	}
 
-    public void MoveCartTransform(PRS prs, bool useDotween, float durtation = 0f)
+    public void MoveScrollTransform(PRS prs, bool useDotween, float durtation = 0f)
     {
         if (useDotween)
         {
@@ -40,4 +48,28 @@ public class Scroll : MonoBehaviour
             transform.localScale = prs.Scale;
         }
     }
+
+	#region Scroll Events
+
+	private void OnMouseOver()
+	{
+        SpellManager.Instance.ScrollMouseOver(this);		
+	}
+
+	private void OnMouseExit()
+	{
+        SpellManager.Instance.ScrollMouseExit(this);
+	}
+
+	private void OnMouseUp()
+	{
+        SpellManager.Instance.ScrollMouseUp();
+	}
+
+	private void OnMouseDown()
+	{
+		SpellManager.Instance.ScrollMouseDown();
+	}
+
+	#endregion
 }
