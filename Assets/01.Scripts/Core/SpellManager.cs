@@ -23,6 +23,8 @@ public class SpellManager : MonoSingleton<SpellManager>
 
 	[Header("Using Scroll Values")]
 	[SerializeField] private LayerMask ExceptionLayer;
+	[SerializeField] private float SpellActiveDuration = 0.2f;
+	[SerializeField] private float SpellInactiveDuration = 0.5f;
 
 	[Header("Spell Datas")]
 	public List<MonoSpellBase> PlayerDeck = new List<MonoSpellBase>();
@@ -72,7 +74,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 		onPlayerScrollZone = Array.Exists(hits, x => x.collider.gameObject.layer == exceptionLayer);
 	}
 
-	public string SpellSentence()
+	public string MixSpellSentence()
 	{
 		StringBuilder sentence = new StringBuilder();
 		sentence.Append("\"");
@@ -118,12 +120,12 @@ public class SpellManager : MonoSingleton<SpellManager>
 		}
 
 		SetSortingOrder(InitSpellType);
-		CardAlignment(InitSpellType);
+		ScrollAlignment(InitSpellType);
 	}
 
 	#endregion
 
-	#region Card Alignment Methods
+	#region Scroll Alignment Methods
 
 	private void SetSortingOrder(SpellTypeEnum initSpellType)
 	{
@@ -136,7 +138,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 		}
 	}
 
-	private void CardAlignment(SpellTypeEnum InitSpellType)
+	private void ScrollAlignment(SpellTypeEnum InitSpellType)
 	{
 		List<PRS> originCardPRSs = new List<PRS>();
 
@@ -197,17 +199,17 @@ public class SpellManager : MonoSingleton<SpellManager>
 
 	#endregion
 
-	#region Select Card
+	#region Scroll Events
 
 	public void ScrollMouseOver(Scroll initScroll)
 	{
 		SelectedScroll = initScroll;
-		EnLargeCard(true, initScroll);
+		EnLargeScroll(true, initScroll);
 	}
 
 	public void ScrollMouseExit(Scroll initScroll)
 	{
-		EnLargeCard(false, initScroll);
+		EnLargeScroll(false, initScroll);
 	}
 
 	public void ScrollMouseUp()
@@ -220,7 +222,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 		isScrollDraging = true;
 	}
 
-	private void EnLargeCard(bool isEnLarge, Scroll initScroll)
+	private void EnLargeScroll(bool isEnLarge, Scroll initScroll)
 	{
 		if (isEnLarge == true)
 		{
@@ -233,6 +235,76 @@ public class SpellManager : MonoSingleton<SpellManager>
 		}
 
 		initScroll.GetComponent<Order>().SetMostFrontOrder(isEnLarge);
+	}
+
+	#endregion
+
+	#region Use Scroll
+
+	[Header("Testing Reference")]
+	[SerializeField] private TMPro.TMP_Text TestingTMP;
+	[SerializeField] private Color[] TestingGroundColor;
+
+	public void CastSpellBase(MonoSpellBase CastingSpell)
+	{
+		switch (CastingSpell.SpellType)
+		{
+			case SpellTypeEnum.High:
+				if(UsedHighSpell == null) UsedHighSpell = (HighSpellBase)CastingSpell;
+				break;
+			case SpellTypeEnum.Low:
+				if(UsedLowSpell == null) UsedLowSpell = (LowSpellBase)CastingSpell;
+				break;
+			default:
+				break;
+		}
+
+		if(UsedHighSpell != null && UsedLowSpell != null)
+		{
+			ActiveSpell();
+		}
+	}
+
+	private void ActiveSpell()
+	{
+		Debug.Log(UsedHighSpell.HighSpellType.ToString() + " : " + (int)UsedHighSpell.HighSpellType);
+		ActiveAttack();
+		StartCoroutine(ShowSpellSentence());
+	}
+
+	private void ActiveAttack()
+	{
+		Vector2Int AttackedTilePosition = Vector2Int.zero;
+		for (int XCount = 0; XCount < UsedLowSpell.AttackZone.Count; XCount++)
+		{
+			for(int YCount = 0; YCount < UsedLowSpell.AttackZone[XCount].Line.Count; YCount++)
+			{
+				if (UsedLowSpell.AttackZone[XCount].Line[YCount] == true)
+				{
+					AttackedTilePosition.Set(XCount, YCount);
+					MapManager.Instance.SettedTiles[AttackedTilePosition]
+						.ChangeColor(TestingGroundColor[(int)UsedHighSpell.HighSpellType], 2f);
+				}
+			}
+		}
+	}
+
+	private IEnumerator ShowSpellSentence()
+	{
+		TestingTMP.transform.DOScale(1, 0.2f).SetEase(Ease.OutBack)
+			.OnStart(() =>
+			{
+				TestingTMP.text = MixSpellSentence();
+
+				UsedLowSpell = null;
+				UsedHighSpell = null;
+			});
+			yield return new WaitForSeconds(1f);
+		TestingTMP.transform.DOScale(0, 0.5f).SetEase(Ease.OutQuint)
+			.OnStart(() =>
+			{
+				TestingTMP.text = "";
+			});
 	}
 
 	#endregion

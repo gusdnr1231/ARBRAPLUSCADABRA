@@ -13,7 +13,7 @@ public class Scroll : MonoBehaviour
     [Header("Scroll Transform Datas")]
     public PRS originPRS;
 
-    public MonoSpellBase ScrollSpellData { get; set; }
+    public MonoSpellBase ScrollSpellData;
 
     public void InitSpellData(MonoSpellBase InitData)
     {
@@ -49,6 +49,11 @@ public class Scroll : MonoBehaviour
         }
     }
 
+    public void CastingSpell()
+    {
+        SpellManager.Instance.CastSpellBase(ScrollSpellData);
+    }
+
 	#region Scroll Events
 
 	private void OnMouseOver()
@@ -64,6 +69,7 @@ public class Scroll : MonoBehaviour
 	private void OnMouseUp()
 	{
         SpellManager.Instance.ScrollMouseUp();
+		CastingSpell();
 	}
 
 	private void OnMouseDown()
