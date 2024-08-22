@@ -8,8 +8,8 @@ using Random = UnityEngine.Random;
 
 public class SpellManager : MonoSingleton<SpellManager>
 {
-	[Header("Scroll Datas")]
-	[SerializeField] private Scroll CardPrefab;
+	[Header("ScrollCard Datas")]
+	[SerializeField] private ScrollCard ScrollPrefab;
 	[SerializeField][Range(0.1f, 2f)] private float CardSize = 1f;
 	[SerializeField][Range(1f, 3f)] private float EnLargeCardSize = 2f;
 	[SerializeField][Range(0f, 1f)] private float CardMoveDuration = 0.3f;
@@ -21,20 +21,20 @@ public class SpellManager : MonoSingleton<SpellManager>
 	[SerializeField] private Transform LowSpellTop;
 	[SerializeField] private Transform LowSpellBottom;
 
-	[Header("Using Scroll Values")]
+	[Header("Using ScrollCard Values")]
 	[SerializeField] private LayerMask ExceptionLayer;
 	[SerializeField] private float SpellActiveDuration = 0.2f;
 	[SerializeField] private float SpellInactiveDuration = 0.5f;
 
 	[Header("Spell Datas")]
 	public List<MonoSpellBase> PlayerDeck = new List<MonoSpellBase>();
-	public List<Scroll> LowSpellHand = new List<Scroll>();
-	public List<Scroll> HighSpellHand = new List<Scroll>();
+	public List<ScrollCard> LowSpellHand = new List<ScrollCard>();
+	public List<ScrollCard> HighSpellHand = new List<ScrollCard>();
 
 	public LowSpellBase UsedLowSpell { get; set; }
 	public HighSpellBase UsedHighSpell { get; set; }
 
-	private Scroll SelectedScroll = null;
+	private ScrollCard SelectedScroll = null;
 
 	private bool isScrollDraging = false;
 	private bool onPlayerScrollZone = false;
@@ -94,19 +94,19 @@ public class SpellManager : MonoSingleton<SpellManager>
 			for (int count = 0; count < LowSpellHand.Count; count++) Destroy(LowSpellHand[count].gameObject);
 			LowSpellHand.Clear();
 		}
-		else if(LowSpellHand == null) LowSpellHand = new List<Scroll>();	
+		else if(LowSpellHand == null) LowSpellHand = new List<ScrollCard>();	
 
 		if (HighSpellHand != null)
 		{
 			for (int count = 0; count < HighSpellHand.Count; count++) Destroy(HighSpellHand[count].gameObject);
 			HighSpellHand.Clear();
 		}
-		else if(HighSpellHand == null) HighSpellHand = new List<Scroll>();	
+		else if(HighSpellHand == null) HighSpellHand = new List<ScrollCard>();	
 	}
 
 	public void AddCard()
 	{
-		Scroll addCardObject = Instantiate(CardPrefab, CardSpawnPosition.position, Quaternion.identity);
+		ScrollCard addCardObject = Instantiate(ScrollPrefab, CardSpawnPosition.position, Quaternion.identity);
 
 		addCardObject.InitSpellData(PlayerDeck[Random.Range(0, PlayerDeck.Count)]);
 
@@ -133,7 +133,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 		
 		for (int forCount = 0; forCount < HandCount; forCount++)
 		{
-			Scroll targetCard = initSpellType == SpellTypeEnum.Low ? LowSpellHand[forCount] : HighSpellHand[forCount];
+			ScrollCard targetCard = initSpellType == SpellTypeEnum.Low ? LowSpellHand[forCount] : HighSpellHand[forCount];
 			targetCard?.GetComponent<Order>().SetOriginOrder(forCount);
 		}
 	}
@@ -154,7 +154,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 		var targetHands = InitSpellType == SpellTypeEnum.Low ? LowSpellHand : HighSpellHand;
 		for(int count = 0; count < targetHands.Count; count++)
 		{
-			Scroll targetCard = targetHands[count];
+			ScrollCard targetCard = targetHands[count];
 
 			targetCard.originPRS = originCardPRSs[count];
 			targetCard.MoveScrollTransform(targetCard.originPRS, true, CardMoveDuration);
@@ -201,13 +201,13 @@ public class SpellManager : MonoSingleton<SpellManager>
 
 	#region Scroll Events
 
-	public void ScrollMouseOver(Scroll initScroll)
+	public void ScrollMouseOver(ScrollCard initScroll)
 	{
 		SelectedScroll = initScroll;
 		EnLargeScroll(true, initScroll);
 	}
 
-	public void ScrollMouseExit(Scroll initScroll)
+	public void ScrollMouseExit(ScrollCard initScroll)
 	{
 		EnLargeScroll(false, initScroll);
 	}
@@ -222,7 +222,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 		isScrollDraging = true;
 	}
 
-	private void EnLargeScroll(bool isEnLarge, Scroll initScroll)
+	private void EnLargeScroll(bool isEnLarge, ScrollCard initScroll)
 	{
 		if (isEnLarge == true)
 		{

@@ -607,7 +607,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b090e9152161cc7479a9dc0ca470d971, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardPrefab: {fileID: 5871453443345695112, guid: b7e7b5ce56fd21f469a0c4ea7f03d25e, type: 3}
+  ScrollPrefab: {fileID: 8706518612110662250, guid: b7e7b5ce56fd21f469a0c4ea7f03d25e, type: 3}
   CardSize: 1.5
   EnLargeCardSize: 2
   CardMoveDuration: 0.3

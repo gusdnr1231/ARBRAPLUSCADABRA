@@ -181,7 +181,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4299049261098038965}
   - component: {fileID: 2672200086564836414}
-  - component: {fileID: 5871453443345695112}
+  - component: {fileID: 8706518612110662250}
   - component: {fileID: 8133015270438650670}
   - component: {fileID: 7211822199297161311}
   m_Layer: 0
@@ -259,7 +259,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5871453443345695112
+--- !u!114 &8706518612110662250
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -268,7 +268,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5899549364118247462}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1014b37bf8bf2de4bb7c200b147cbc95, type: 3}
+  m_Script: {fileID: 11500000, guid: 2ba1c86a1866a004b8b211d9f8f215ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SpellName: {fileID: 7632935910290194846}
@@ -276,6 +276,7 @@ MonoBehaviour:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 0}
     Scale: {x: 0, y: 0, z: 0}
+  ScrollSpellData: {fileID: 0}
 --- !u!114 &8133015270438650670
 MonoBehaviour:
   m_ObjectHideFlags: 0

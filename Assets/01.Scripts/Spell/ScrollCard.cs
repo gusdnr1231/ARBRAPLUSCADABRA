@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class Scroll : MonoBehaviour
+public class ScrollCard : MonoBehaviour
 {
     
-    [Header("Scroll Infomation Objects")]
+    [Header("ScrollCard Infomation Objects")]
     [SerializeField] private TMP_Text SpellName;
 
-    [Header("Scroll Transform Datas")]
+    [Header("ScrollCard Transform Datas")]
     public PRS originPRS;
 
     public MonoSpellBase ScrollSpellData;
