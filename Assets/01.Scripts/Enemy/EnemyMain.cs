@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class EnemyMain : MonoCharacter, IDamageable
@@ -14,6 +15,7 @@ public class EnemyMain : MonoCharacter, IDamageable
 
 	[Header("Enemy Children")]
 	[SerializeField] private Transform EnemyVisual;
+	[SerializeField] private TMP_Text PatienceTxt;
 
 	private int CurrentPatience = 0;
 

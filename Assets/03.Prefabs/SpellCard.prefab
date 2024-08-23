@@ -57,7 +57,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 6109652203668130027, guid: 9898ee2d5d78b0342b887f8a6de3a0ce, type: 2}
+  - {fileID: -2739483453992503786, guid: 212e5f7396174b0499e640113efb0051, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -101,8 +101,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 9898ee2d5d78b0342b887f8a6de3a0ce, type: 2}
-  m_sharedMaterial: {fileID: 6109652203668130027, guid: 9898ee2d5d78b0342b887f8a6de3a0ce, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 212e5f7396174b0499e640113efb0051, type: 2}
+  m_sharedMaterial: {fileID: -2739483453992503786, guid: 212e5f7396174b0499e640113efb0051, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -126,8 +126,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.5
-  m_fontSizeBase: 1.5
+  m_fontSize: 3
+  m_fontSizeBase: 3
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -668,7 +668,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 6109652203668130027, guid: 9898ee2d5d78b0342b887f8a6de3a0ce, type: 2}
+  - {fileID: -2739483453992503786, guid: 212e5f7396174b0499e640113efb0051, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -712,8 +712,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 9898ee2d5d78b0342b887f8a6de3a0ce, type: 2}
-  m_sharedMaterial: {fileID: 6109652203668130027, guid: 9898ee2d5d78b0342b887f8a6de3a0ce, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 212e5f7396174b0499e640113efb0051, type: 2}
+  m_sharedMaterial: {fileID: -2739483453992503786, guid: 212e5f7396174b0499e640113efb0051, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -737,8 +737,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.5
-  m_fontSizeBase: 1.5
+  m_fontSize: 3
+  m_fontSizeBase: 3
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

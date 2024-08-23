@@ -31,7 +31,7 @@ public class ScrollCard : MonoBehaviour
         {
             case SpellTypeEnum.Low:
 				FigureBuilder.Clear();
-                FigureBuilder.Append("- ");
+                FigureBuilder.Append("-");
 				FigureBuilder.Append(ScrollSpellData.Damage);
                 SpellDamage.text = FigureBuilder.ToString();
 				break;
@@ -50,7 +50,7 @@ public class ScrollCard : MonoBehaviour
         SpellName.text = ScrollSpellData.SpellName;
         SpellIcon.sprite = ScrollSpellData.SpellIcon;
 		FigureBuilder.Clear();
-		FigureBuilder.Append("+ ");
+		FigureBuilder.Append("+");
 		FigureBuilder.Append(ScrollSpellData.CollectMP);
 		SpellMP.text = FigureBuilder.ToString();
 
