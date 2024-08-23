@@ -16,9 +16,9 @@ public enum TileState
 {
     None = 0,
     PlayerAttack = 1,
-    PlayerMove = 2,
+    PlayerHere = 2,
     EnemyAttack = 3,
-    EnemyMove = 4,
+    EnemyHere = 4,
     End
 }
 
@@ -26,11 +26,10 @@ public class TileBase : MonoBehaviour
 {
     [Header("Tile Data")]
     public TileData M_TileData;
-    
+    [SerializeField] private Sprite[] TileSprites;
+
     private Animator TileAnimator;
     private SpriteRenderer TileRenderer;
-
-    private Coroutine ColorChangedCoroutine;
 
 	public void SetUpTileData(int InitPositionX, int InitPositionY, TileState InitState)
     {
@@ -47,6 +46,7 @@ public class TileBase : MonoBehaviour
 	public void UpdateTileState(TileState InitState)
 	{
 		M_TileData.InstanceTileState = InitState;
+        ChangeSprite(M_TileData.InstanceTileState);
 	}
 
     public void SetTileAnimation()
@@ -59,24 +59,22 @@ public class TileBase : MonoBehaviour
         return this.transform.position;
     }
 
-    public void ChangeColor(Color AfterColor, float WaitTime)
+    public void ChangeSprite(TileState initState)
 	{
-		TileRenderer.color = AfterColor;
-        if (ColorChangedCoroutine != null)
+		switch(initState)
         {
-            StopAllCoroutines();
-            TileRenderer.color = Color.white;
+            case TileState.None:
+                TileRenderer.sprite = TileSprites[0];
+				break;
+            case TileState.PlayerAttack:
+                TileRenderer.sprite = TileSprites[1];
+                break;
+
+            case TileState.EnemyAttack:
+                TileRenderer.sprite = TileSprites[2];
+                break;
+
+            default: break;
         }
-
-        ColorChangedCoroutine = StartCoroutine(ChangeColorCoroutine(AfterColor, WaitTime));
     }
-
-    private IEnumerator ChangeColorCoroutine(Color AfterColor, float WaitTime)
-    {
-        Debug.Log("Start Change Tile Color");
-		TileRenderer.color = AfterColor;
-		yield return new WaitForSeconds(WaitTime);
-		TileRenderer.color = Color.white;
-        Debug.Log("End Change Tile Color");
-	}
 }

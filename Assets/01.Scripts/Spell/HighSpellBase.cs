@@ -13,36 +13,9 @@ public enum HighSpellTypeEnum
 	End
 }
 
-public struct HighSpellData
-{
-	public HighSpellTypeEnum HighSpellType;
-	public string SpellName;
-}
-
 [CreateAssetMenu(fileName = "New High Spell", menuName = "Spell/High")]
-public class HighSpellBase : MonoSpellBase, ISpell
+public class HighSpellBase : MonoSpellBase
 {
 	[Header("High Spell Value")]
 	public HighSpellTypeEnum HighSpellType;
-
-	private HighSpellData Data = new HighSpellData();
-	
-	private void PackagingData()
-	{
-		Data = new HighSpellData() { HighSpellType = HighSpellType };
-		Data.SpellName = string.IsNullOrEmpty(SpellName) ? "" : SpellName;
-	}
-
-	public void CastSpell()
-	{
-	}
-
-	public void UseSpell()
-	{
-	}
-
-	public void CancelSpell()
-	{
-	}
-
 }

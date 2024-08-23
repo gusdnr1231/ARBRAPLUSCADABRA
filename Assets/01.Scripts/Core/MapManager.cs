@@ -46,7 +46,7 @@ public class MapManager : MonoSingleton<MapManager>
 				NewTile.SetUpTileData(TileArrayNumber.x, TileArrayNumber.y, TileState.None);
 				SettedTiles.TryAdd(TileArrayNumber, NewTile);
 
-				yield return new WaitForSeconds(0.01f);
+				yield return new WaitForSeconds(0.001f);
 			}
 		}
 

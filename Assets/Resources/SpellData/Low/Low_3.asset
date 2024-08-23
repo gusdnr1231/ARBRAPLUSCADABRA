@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpellType: 1
   SpellName: "\uC138\uCE7C\uB86C"
-  CollectMP: 0
-  Damage: 0
+  SpellIcon: {fileID: 21300000, guid: 76780e6ee2f1c374c9db7b6c54575c9e, type: 3}
+  CollectMP: 13
+  Damage: 16
   AttackZone:
   - Line: 00000000000000
   - Line: 00010101010100

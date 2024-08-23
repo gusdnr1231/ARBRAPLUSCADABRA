@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpellType: 0
   SpellName: "\uC81C\uB974\uB2E4"
+  SpellIcon: {fileID: 21300000, guid: 76e21289856259e428128ff37324b655, type: 3}
   CollectMP: 16
+  Damage: 0
   HighSpellType: 3

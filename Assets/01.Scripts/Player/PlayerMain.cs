@@ -15,16 +15,16 @@ public class PlayerMain : MonoCharacter, IDamageable
 	[Header("Player Move Value")]
 	[SerializeField] private float MoveDuration = 0.5f;
 
-	//Use To Move
-	private Vector2Int CurrentTileNumber;
-	private bool CanMoveUpX => CurrentTileNumber.x - 1 >= 0 && CanMove == true;
-	private bool CanMoveDownX => CurrentTileNumber.x + 1<= 6 && CanMove == true;
-	private bool CanMoveUpY => CurrentTileNumber.y - 1 >= 0 && CanMove == true;
-	private bool CanMoveDownY => CurrentTileNumber.y + 1 <= 6 && CanMove == true;
+	//Mobility Conditions
+	private bool CanMoveUpX => CurrentTileNumber.x - 1 >= 0 && CanMove == true && IsMove == false;
+	private bool CanMoveDownX => CurrentTileNumber.x + 1 <= 6 && CanMove == true && IsMove == false;
+	private bool CanMoveUpY => CurrentTileNumber.y - 1 >= 0 && CanMove == true && IsMove == false;
+	private bool CanMoveDownY => CurrentTileNumber.y + 1 <= 6 && CanMove == true && IsMove == false;
 
-	private bool CanMove = true;
-	private bool CanAttack = true;
-	private bool IsAttack = false;
+	public bool CanMove { get; set; }
+	public bool IsMove { get; set; }
+	public bool CanCasting { get; set; }
+	public bool OnCasting { get; set; }
 
 	private void Awake()
 	{
@@ -41,42 +41,50 @@ public class PlayerMain : MonoCharacter, IDamageable
 	{
 		if (Input.GetKeyDown(KeyCode.W))
 		{
+			Debug.Log($"Input W : CanMove[{CanMove}]");
 			if (CanMoveUpX)
 			{
 				CurrentTileNumber.x = CurrentTileNumber.x - 1;
 				PlayerRenderer.flipX = false;
+
+				CheckAndMoveToTile();
 			}
-			CheckAndMoveToTile();
 		}
 
 		if (Input.GetKeyDown(KeyCode.S))
 		{
+			Debug.Log($"Input S : CanMove[{CanMove}]");
 			if (CanMoveDownX)
 			{
 				CurrentTileNumber.x = CurrentTileNumber.x + 1;
 				PlayerRenderer.flipX = true;
+
+				CheckAndMoveToTile();
 			}
-			CheckAndMoveToTile();
 		}
 
 		if (Input.GetKeyDown(KeyCode.A))
 		{
+			Debug.Log($"Input A : CanMove[{CanMove}]");
 			if (CanMoveUpY)
 			{
 				CurrentTileNumber.y = CurrentTileNumber.y - 1;
 				PlayerRenderer.flipX = true;
+
+				CheckAndMoveToTile();
 			}
-			CheckAndMoveToTile();
 		}
 
 		if (Input.GetKeyDown(KeyCode.D))
 		{
+			Debug.Log($"Input D : CanMove[{CanMove}]");
 			if (CanMoveDownY)
 			{
 				CurrentTileNumber.y = CurrentTileNumber.y + 1;
 				PlayerRenderer.flipX = false;
+
+				CheckAndMoveToTile();
 			}
-			CheckAndMoveToTile();
 		}
 	}
 
@@ -85,8 +93,8 @@ public class PlayerMain : MonoCharacter, IDamageable
 		CurrentHP = MaxHP;
 
 		CanMove = true;
-		CanAttack = true;
-		IsAttack = false;
+		CanCasting = true;
+		OnCasting = false;
 
 		CurrentTileNumber = new Vector2Int(3, 3);
 
@@ -104,16 +112,14 @@ public class PlayerMain : MonoCharacter, IDamageable
 				transform.DOMove(MovedTile.ReturnTilePosition(), MoveDuration).SetEase(Ease.OutBack)
 					.OnStart(() =>
 					{
-						CanMove = false;
-						CanAttack = false;
+						IsMove = true;
 					})
 					.OnComplete(() =>
 					{
-						CanMove = true;
-						CanAttack = true;
+						IsMove = false;
 					});
 			}
-			else if(UseDotween == false)
+			else if (UseDotween == false)
 			{
 				transform.position = MovedTile.ReturnTilePosition();
 			}
@@ -124,7 +130,7 @@ public class PlayerMain : MonoCharacter, IDamageable
 
 	#region Damageable Methods
 
-	public void TakeDamage(float damage)
+	public void TakeDamage(float damage, HighSpellTypeEnum AttackedType)
 	{
 		CurrentHP = CurrentHP - damage;
 		if (CurrentHP <= 0) Die();
@@ -132,7 +138,7 @@ public class PlayerMain : MonoCharacter, IDamageable
 
 	public void TakeHeal(float heal)
 	{
-		CurrentHP = CurrentHP + heal;
+		CurrentHP = Mathf.Clamp(CurrentHP + heal,0, MaxHP);
 	}
 
 	public void Die()

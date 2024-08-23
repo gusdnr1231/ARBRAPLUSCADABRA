@@ -11,5 +11,7 @@ public class MonoSpellBase : ScriptableObject
     [Header("Base Spell Value")]
     public SpellTypeEnum SpellType;
     public string SpellName;
-    [Range(0, 100)] public int CollectMP = 0;
+    public Sprite SpellIcon;
+    [Range(0, 20)] public int CollectMP = 0;
+	[Range(0, 20)] public int Damage;
 }

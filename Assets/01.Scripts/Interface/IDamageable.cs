@@ -1,6 +1,6 @@
 public interface IDamageable
 {
-    public void TakeDamage(float damage);
+    public abstract void TakeDamage(float damage, HighSpellTypeEnum AttackedType);
 
     public void TakeHeal(float heal);
 
