@@ -15,16 +15,21 @@ public class MapManager : MonoSingleton<MapManager>
 
 	public Dictionary<Vector2Int, TileBase> SettedTiles = new Dictionary<Vector2Int, TileBase>();
 	public static Action OnCompleteLoadingMap;
+
+	private bool isActiveMap;
+	private Coroutine MappingCoroutine;
+
 	private void Start()
 	{
-		StartCoroutine(SetMapTile());
+		MappingCoroutine = StartCoroutine(SetMapTile());
 	}
 
 	private void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Q))
+		Debug.Log(MappingCoroutine == null);
+		if (Input.GetKeyDown(KeyCode.Q) && MappingCoroutine == null)
 		{
-			StartCoroutine(UnSetMapTile());
+			MappingCoroutine = StartCoroutine(SetActiveMapTile(!isActiveMap));
 		}
 	}
 
@@ -50,10 +55,13 @@ public class MapManager : MonoSingleton<MapManager>
 			}
 		}
 
+		isActiveMap = true;
+		
 		OnCompleteLoadingMap?.Invoke();
+		MappingCoroutine = null;
 	}
 
-	private IEnumerator UnSetMapTile()
+	private IEnumerator SetActiveMapTile(bool isActive)
 	{
 		Vector2Int TileArrayNumber;
 		for (int countX = MapSize - 1; countX >= 0; countX--)
@@ -61,9 +69,12 @@ public class MapManager : MonoSingleton<MapManager>
 			for (int countY = MapSize - 1; countY >= 0; countY--)
 			{
 				TileArrayNumber = new Vector2Int(countX, countY);
-				SettedTiles[TileArrayNumber].SetTileAnimation();
+				SettedTiles[TileArrayNumber].SetTileAnimation(isActive);
 				yield return new WaitForSeconds(0.01f);
 			}
 		}
+
+		isActiveMap = isActive;
+		MappingCoroutine = null;
 	}
 }

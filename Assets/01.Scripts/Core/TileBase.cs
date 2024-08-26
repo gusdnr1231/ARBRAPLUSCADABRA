@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 [System.Serializable]
 public struct TileData
@@ -10,6 +11,7 @@ public struct TileData
     public int TilePositionX;
     public int TilePositionY;
     public TileState InstanceTileState;
+	public MonoCharacter OnCharacter;
 }
 
 public enum TileState
@@ -24,12 +26,18 @@ public enum TileState
 
 public class TileBase : MonoBehaviour
 {
-    [Header("Tile Data")]
+	private readonly int AppearTriggerHash = Animator.StringToHash("Appear");
+	private readonly int DisappearTriggerHash = Animator.StringToHash("Disappear");
+
+	[Header("Tile Data")]
     public TileData M_TileData;
     [SerializeField] private Sprite[] TileSprites;
 
     private Animator TileAnimator;
     private SpriteRenderer TileRenderer;
+
+    private bool isOnCharacter = false;
+    private IDamageable OnCharacterDamageable;
 
 	public void SetUpTileData(int InitPositionX, int InitPositionY, TileState InitState)
     {
@@ -40,7 +48,7 @@ public class TileBase : MonoBehaviour
         M_TileData.TilePositionY = InitPositionY;
         if(InitState != TileState.End) M_TileData.InstanceTileState = InitState;
 
-        TileAnimator.SetTrigger("Appear");
+        TileAnimator.SetTrigger(AppearTriggerHash);
     }
 
 	public void UpdateTileState(TileState InitState)
@@ -49,9 +57,10 @@ public class TileBase : MonoBehaviour
         ChangeSprite(M_TileData.InstanceTileState);
 	}
 
-    public void SetTileAnimation()
+    public void SetTileAnimation(bool isAppear)
     {
-		TileAnimator.SetTrigger("Disappear");
+		if(isAppear == true) TileAnimator.SetTrigger(AppearTriggerHash);
+		else if(isAppear == false) TileAnimator.SetTrigger(DisappearTriggerHash);
 	}
 
     public Vector3 ReturnTilePosition()
@@ -76,5 +85,18 @@ public class TileBase : MonoBehaviour
 
             default: break;
         }
+    }
+
+	public void SetOnCharacter(MonoCharacter character)
+	{
+		M_TileData.OnCharacter = character;
+		isOnCharacter = M_TileData.OnCharacter.TryGetComponent(out OnCharacterDamageable);
+	}
+
+    public void ActiveDamageable(int value, HighSpellTypeEnum spellType, bool isAttack = true)
+    {
+        if(OnCharacterDamageable == null) return;
+        if(isAttack == true) OnCharacterDamageable.TakeDamage(value, spellType);
+        else if(isAttack == false) OnCharacterDamageable.TakeHeal(value);
     }
 }

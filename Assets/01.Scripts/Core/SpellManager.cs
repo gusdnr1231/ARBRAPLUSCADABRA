@@ -253,8 +253,8 @@ public class SpellManager : MonoSingleton<SpellManager>
 	{
 		isScrollDraging = false;
 
-		Player.CanMove = !isScrollDraging;
-		Player.OnCasting = isScrollDraging;
+		Player.GetCompo<PlayerMovement>().CanMove = !isScrollDraging;
+		Player.GetCompo<PlayerMovement>().OnCasting = isScrollDraging;
 
 		if (onPlayerScrollZone == false)
 		{
@@ -270,8 +270,8 @@ public class SpellManager : MonoSingleton<SpellManager>
 	{
 		isScrollDraging = true;
 
-		Player.CanMove = !isScrollDraging;
-		Player.OnCasting = isScrollDraging;
+		Player.GetCompo<PlayerMovement>().CanMove = !isScrollDraging;
+		Player.GetCompo<PlayerMovement>().OnCasting = isScrollDraging;
 	}
 
 	private void EnLargeScroll(bool isEnLarge, ScrollCard initScroll)
@@ -298,7 +298,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 
 	public void CastSpellBase(MonoSpellBase CastingSpell)
 	{
-		if(Player.CanCasting == false) return;
+		if(Player.GetCompo<PlayerMovement>().CanCasting == false) return;
 
 		switch (CastingSpell.SpellType)
 		{
@@ -331,7 +331,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 
 	private void ActiveSpell()
 	{
-		Player.CanCasting = false;
+		Player.GetCompo<PlayerMovement>().CanCasting = false;
 
 		ActiveAttack(TileState.PlayerAttack);
 		StartCoroutine(ShowSpellSentence(MixSpellSentence(), true));
@@ -354,7 +354,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 		ResetTileSprite();
 	}
 
-	private void ChangeTileToAttack(LowSpellBase InitLowSpell, TileState AttackBy)
+	public void ChangeTileToAttack(LowSpellBase InitLowSpell, TileState AttackBy)
 	{
 		Vector2Int AttackedTilePosition = Vector2Int.zero;
 		for (int XCount = 0; XCount < InitLowSpell.AttackZone.Count; XCount++)
@@ -401,7 +401,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 					UsedLowSpell = null;
 					UsedHighSpell = null;
 
-					Player.CanCasting = true;
+					Player.GetCompo<PlayerMovement>().CanCasting = true;
 				});
 		}
 	}

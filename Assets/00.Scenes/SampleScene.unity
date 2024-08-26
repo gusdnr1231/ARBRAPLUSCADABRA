@@ -131,6 +131,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 101139194}
+  - component: {fileID: 101139197}
   - component: {fileID: 101139195}
   - component: {fileID: 101139196}
   m_Layer: 0
@@ -228,6 +229,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &101139197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101139193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 074d033def311c24c842e685809d8910, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &319084437
 GameObject:
   m_ObjectHideFlags: 0
@@ -1409,7 +1422,7 @@ GameObject:
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1412054975
 Transform:
   m_ObjectHideFlags: 0
@@ -1442,11 +1455,11 @@ MonoBehaviour:
   MaxHP: 20
   CurrentHP: 0
   CurrentTileNumber: {x: 0, y: 0}
-  WeaknessTypes: 
-  StrengthTypes: 
-  MaxPatience: 1
+  WeaknessTypes: 0100000002000000
+  StrengthTypes: 04000000
+  MaxPatience: 7
   EnemyVisual: {fileID: 395299096}
-  MaxPatienceTxt: {fileID: 459728781}
+  PatienceTxt: {fileID: 459728781}
 --- !u!1 &1624332987
 GameObject:
   m_ObjectHideFlags: 0
@@ -1602,6 +1615,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2082348812}
   - component: {fileID: 2082348814}
+  - component: {fileID: 2082348815}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1640,8 +1654,19 @@ MonoBehaviour:
   MaxHP: 10
   CurrentHP: 0
   CurrentTileNumber: {x: 0, y: 0}
-  PlayerVisual: {fileID: 101139193}
-  MoveDuration: 0.5
+--- !u!114 &2082348815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2082348810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48abb0cc40a27e64bb1645a0b68ede0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MoveDuration: 0.2
 --- !u!1 &2119009429
 GameObject:
   m_ObjectHideFlags: 0
