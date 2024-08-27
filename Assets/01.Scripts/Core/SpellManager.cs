@@ -364,7 +364,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 				if (InitLowSpell.AttackZone[XCount].Line[YCount] == true)
 				{
 					AttackedTilePosition.Set(XCount, YCount);
-					MapManager.Instance.SettedTiles[AttackedTilePosition].ChangeSprite(AttackBy);
+					MapManager.Instance.SettedTiles[AttackedTilePosition].UpdateTileState(AttackBy);
 				}
 			}
 		}
@@ -374,7 +374,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 	{
 		foreach (var TileData in MapManager.Instance.SettedTiles)
 		{
-			TileData.Value.ChangeSprite(TileState.None);
+			TileData.Value.UpdateTileState(TileState.None);
 		}
 	}
 

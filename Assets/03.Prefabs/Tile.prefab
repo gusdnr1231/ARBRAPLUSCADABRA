@@ -54,7 +54,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 3ce4cb96bf117e249b8d617f28dca40a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -103,6 +103,7 @@ MonoBehaviour:
     TilePositionX: 0
     TilePositionY: 0
     InstanceTileState: 0
+    OnCharacter: {fileID: 0}
   TileSprites:
   - {fileID: 1126057842, guid: 27732de6d3a4dd54b8cce4eb79851306, type: 3}
   - {fileID: 532406266, guid: 27732de6d3a4dd54b8cce4eb79851306, type: 3}

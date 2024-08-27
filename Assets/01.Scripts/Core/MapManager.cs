@@ -69,7 +69,7 @@ public class MapManager : MonoSingleton<MapManager>
 			for (int countY = MapSize - 1; countY >= 0; countY--)
 			{
 				TileArrayNumber = new Vector2Int(countX, countY);
-				SettedTiles[TileArrayNumber].SetTileAnimation(isActive);
+				SettedTiles[TileArrayNumber].ActionSetActiveTile(isActive);
 				yield return new WaitForSeconds(0.01f);
 			}
 		}
