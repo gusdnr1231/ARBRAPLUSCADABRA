@@ -372,9 +372,9 @@ public class SpellManager : MonoSingleton<SpellManager>
 
 	private void ResetTileSprite()
 	{
-		foreach (var TileData in MapManager.Instance.SettedTiles)
+		foreach (TileBase TileData in MapManager.Instance.SettedTiles.Values)
 		{
-			TileData.Value.UpdateTileState(TileState.None);
+			TileData.ResetTileRender();
 		}
 	}
 

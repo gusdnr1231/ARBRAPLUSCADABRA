@@ -32,7 +32,7 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 			return _instance;
 		}
 	}
-	protected virtual void Awake()
+	public virtual void Awake()
 	{
 		if (Instance == this)
 		{

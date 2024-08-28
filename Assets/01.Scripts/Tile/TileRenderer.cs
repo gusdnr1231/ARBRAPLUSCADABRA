@@ -32,39 +32,41 @@ public class TileRenderer : MonoBehaviour
 		if (Renderer == null) TryGetComponent(out Renderer);
 		TileMaterial = Renderer.material;
 
-		_tileBase.OnStateChange += ChangeSpriteToState;
+		_tileBase.OnStateChange += ChangeShaderToState;
 		_tileBase.SetActiveTile += SetTileAnimation;
+		_tileBase.OnCastingTile += CastingRendering;
 	}
 
-	public void ChangeSpriteToState(TileState initState)
+	public void ChangeShaderToState(TileState initState)
 	{
 		switch (initState)
 		{
 			case TileState.None:
-				Renderer.sprite = TileSprites[0];
-				SetMaterial(1f, 0f, OutlineColors[0], GlowColors[0]);
+				SetOutlineFade(1f);
+				SetOutlineColor(OutlineColors[0]);
 				break;
 				
 			case TileState.PlayerHere:
-				SetMaterial(1f, 0f, OutlineColors[1], GlowColors[0]);
+				SetOutlineFade(1f);
+				SetOutlineColor(OutlineColors[1]);
 				break;
 				
 			case TileState.EnemyHere:
-				SetMaterial(1f, 0f, OutlineColors[2], GlowColors[0]);
+				SetOutlineFade(1f);
+				SetOutlineColor(OutlineColors[2]);
 				break;
 				
 			case TileState.ItemHere:
-				SetMaterial(1f, 0f, OutlineColors[3], GlowColors[0]);
+				SetOutlineFade(1f);
+				SetOutlineColor(OutlineColors[3]);
 				break;
 
 			case TileState.PlayerAttack:
-				Renderer.sprite = TileSprites[1];
 				SetGlowFade(1f);
 				SetGlowColor(GlowColors[1]);
 				break;
 
 			case TileState.EnemyAttack:
-				Renderer.sprite = TileSprites[2];
 				SetGlowFade(1f); 
 				SetGlowColor(GlowColors[2]);
 				break;
@@ -72,15 +74,31 @@ public class TileRenderer : MonoBehaviour
 			default: break;
 		}
 	}
+
+	public void CastingRendering(bool isCastingPlayer, bool isCastingEnemy)
+	{
+		if (isCastingPlayer == true) Renderer.sprite = TileSprites[1];
+		else if (isCastingPlayer == false && isCastingEnemy == true) Renderer.sprite = TileSprites[2];
+		else if (isCastingPlayer == false && isCastingEnemy == false)
+		{
+			Renderer.sprite = TileSprites[0];
+			SetGlow(0f, GlowColors[0]);
+		}
+	}
+
 	public void SetTileAnimation(bool isAppear)
 	{
 		Animator.SetTrigger(isAppear ? AppearTriggerHash : DisappearTriggerHash);
 	}
 
-	private void SetMaterial(float OutlineFade, float GlowFade, Color OutlineColor, Color GlowColor)
+	public void SetOutline(float OutlineFade, Color OutlineColor)
 	{
 		SetOutlineFade(OutlineFade);
 		SetOutlineColor(OutlineColor);
+	}
+
+	public void SetGlow(float GlowFade, Color GlowColor)
+	{
 		SetGlowFade(GlowFade);
 		SetGlowColor(GlowColor);
 	}

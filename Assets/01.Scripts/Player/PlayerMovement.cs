@@ -98,7 +98,6 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 			{
 				transform.position = movedTile.ReturnTilePosition();
 			}
-
 			MapManager.Instance.SettedTiles[_player.CurrentTileNumber].SetOnCharacter(_player);
 		}
 	}

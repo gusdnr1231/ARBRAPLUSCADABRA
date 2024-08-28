@@ -33,11 +33,14 @@ public class TileBase : MonoBehaviour
 
     private TileRenderer _tileRenderer;
 
+	private bool isCastingPlayer => M_TileData.InstanceTileState == TileState.PlayerAttack;
+    private bool isCastingEnemy => M_TileData.InstanceTileState == TileState.EnemyAttack;
     private bool isOnCharacter = false;
     private IDamageable OnCharacterDamageable;
 
     public event Action<TileState> OnStateChange;
 	public event Action<bool> SetActiveTile;
+    public event Action<bool, bool> OnCastingTile;
 
 	public void SetUpTileData(int InitPositionX, int InitPositionY, TileState InitState)
     {
@@ -49,15 +52,18 @@ public class TileBase : MonoBehaviour
 		if(_tileRenderer == null) TryGetComponent(out _tileRenderer);
         _tileRenderer.Initialize(this);
 
-        SetActiveTile?.Invoke(true);
-    }
+		SetActiveTile?.Invoke(true);
+		OnStateChange?.Invoke(InitState);
+	}
 
     public void ActionSetActiveTile(bool isActive) => SetActiveTile?.Invoke(isActive);
 
 	public void UpdateTileState(TileState InitState)
 	{
 		M_TileData.InstanceTileState = InitState;
+		
 		OnStateChange?.Invoke(M_TileData.InstanceTileState);
+		OnCastingTile?.Invoke(isCastingPlayer, isCastingEnemy);
 	}
 
     public Vector3 ReturnTilePosition()
@@ -70,7 +76,7 @@ public class TileBase : MonoBehaviour
 		M_TileData.OnCharacter = character;
 
         if(M_TileData.OnCharacter == null) OnStateChange?.Invoke(TileState.None);
-        else if(M_TileData.OnCharacter != null)
+		else if(M_TileData.OnCharacter != null)
         {
 			OnStateChange?.Invoke((TileState)character.Character_Type);
 			isOnCharacter = M_TileData.OnCharacter.TryGetComponent(out OnCharacterDamageable);
@@ -83,4 +89,14 @@ public class TileBase : MonoBehaviour
         if(isAttack == true) OnCharacterDamageable.TakeDamage(value, spellType);
         else if(isAttack == false) OnCharacterDamageable.TakeHeal(value);
     }
+
+    public void ResetTileRender()
+    {
+		if (M_TileData.OnCharacter == null) UpdateTileState(TileState.None);
+		else if (M_TileData.OnCharacter != null)
+		{
+			UpdateTileState((TileState)M_TileData.OnCharacter.Character_Type);
+			isOnCharacter = M_TileData.OnCharacter.TryGetComponent(out OnCharacterDamageable);
+		}
+	}
 }
