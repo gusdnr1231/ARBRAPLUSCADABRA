@@ -529,6 +529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba1c86a1866a004b8b211d9f8f215ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PoolName: ScrollCard
   SpellName: {fileID: 7632935910290194846}
   SpellIcon: {fileID: 145759040457223413}
   SpellMP: {fileID: 2983033673320216713}

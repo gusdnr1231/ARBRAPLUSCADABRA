@@ -5,7 +5,7 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 
-public class ScrollCard : MonoBehaviour
+public class ScrollCard : PoolableMono
 {
     
     [Header("ScrollCard Infomation Objects")]
@@ -21,30 +21,34 @@ public class ScrollCard : MonoBehaviour
 
     private StringBuilder FigureBuilder = new StringBuilder();
 
+
+	public override void ResetPoolableMono()
+	{
+	}
+
+	public override void EnablePoolableMono()
+	{
+	}
+
+
 	public void InitSpellData(MonoSpellBase InitData)
     {
 		ScrollSpellData = InitData;
 
         SetSpellDefaultData();
-		
-		switch (ScrollSpellData.SpellType)
-        {
-            case SpellTypeEnum.Low:
-				FigureBuilder.Clear();
-                FigureBuilder.Append("-");
-				FigureBuilder.Append(ScrollSpellData.Damage);
-                SpellDamage.text = FigureBuilder.ToString();
-				break;
-            case SpellTypeEnum .High:
-				SpellDamage.text = "";
-				break;
 
-            default:
-                break;
-        }
-
+		if (ScrollSpellData.SpellType == SpellTypeEnum.Low)
+		{
+			FigureBuilder.Clear();
+			FigureBuilder.Append("-");
+			FigureBuilder.Append(ScrollSpellData.Damage);
+			SpellDamage.text = FigureBuilder.ToString();
+		}
+		else if (ScrollSpellData.SpellType == SpellTypeEnum.High)
+		{
+			SpellDamage.text = string.Empty;
+		}
 	}
-
     private void SetSpellDefaultData()
     {
         SpellName.text = ScrollSpellData.SpellName;

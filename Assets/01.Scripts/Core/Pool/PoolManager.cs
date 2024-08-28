@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-[System.Serializable]
+[Serializable]
 public struct PoolListStruct
 {
-	public string FloorName;
+	public string PoolingListName;
 	public PoolListSO PoolData;
 }
 
@@ -25,7 +25,7 @@ public class PoolManager : MonoSingleton<PoolManager>
 
 	private Dictionary<string, PoolListSO> PoolListData = new Dictionary<string, PoolListSO>();
 	private Dictionary<string, Pool<PoolableMono>> CompletePoolableMonos = new Dictionary<string, Pool<PoolableMono>>();
-	private List<string> StructNamesList = new();
+	private List<string> PoolingListNames = new();
 
 	public override void Awake()
 	{
@@ -38,20 +38,20 @@ public class PoolManager : MonoSingleton<PoolManager>
 
 	public void SetDataListInDictionary()
 	{
-		StructNamesList.Clear();
+		PoolingListNames.Clear();
 		foreach (PoolListStruct structData in DataStruct)
 		{
-			if(structData.PoolData != null && string.IsNullOrEmpty(structData.FloorName) == false)
+			if(structData.PoolData != null && string.IsNullOrEmpty(structData.PoolingListName) == false)
 			{
-				PoolListData.Add(structData.FloorName, structData.PoolData);
-				StructNamesList.Add(structData.FloorName);
+				PoolListData.Add(structData.PoolingListName, structData.PoolData);
+				PoolingListNames.Add(structData.PoolingListName);
 			}
 		}
 	}
 
 	public void SetDataOnStruct(string floorName, bool isReset = false)
 	{
-		if(StructNamesList.Contains(floorName) == false)
+		if(PoolingListNames.Contains(floorName) == false)
 		{
 			Debug.LogWarning("Init Name is Null! Please Check PoolingList's Name");
 			return;
@@ -62,6 +62,19 @@ public class PoolManager : MonoSingleton<PoolManager>
 
 		StartPooling();
 	}
+
+	public void DestroyObjectsInPool(string poolableName)
+	{
+		if (CompletePoolableMonos.ContainsKey(poolableName))
+		{
+			CompletePoolableMonos[poolableName].DestroyAll();
+		}
+		else
+		{
+			Debug.LogWarning($"No pool found for {poolableName}");
+		}
+	}
+
 
 	public void ClearPreviousData()
 	{

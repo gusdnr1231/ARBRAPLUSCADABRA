@@ -10,7 +10,7 @@ using Random = UnityEngine.Random;
 public class SpellManager : MonoSingleton<SpellManager>
 {
 	[Header("ScrollCard Datas")]
-	[SerializeField] private ScrollCard ScrollPrefab;
+	[SerializeField] private string ScrollPoolName = "ScrollCard";
 	[SerializeField][Range(0.1f, 2f)] private float CardSize = 1f;
 	[SerializeField][Range(1f, 3f)] private float EnLargeCardSize = 2f;
 	[SerializeField][Range(0f, 1f)] private float CardMoveDuration = 0.3f;
@@ -119,7 +119,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 
 	public void AddCard()
 	{
-		ScrollCard addCardObject = Instantiate(ScrollPrefab, CardSpawnPosition.position, Quaternion.identity);
+		PoolManager.Instance.Pop(ScrollPoolName, CardSpawnPosition.position).TryGetComponent(out ScrollCard addCardObject);
 
 		addCardObject.InitSpellData(PlayerDeck[Random.Range(0, PlayerDeck.Count)]);
 
