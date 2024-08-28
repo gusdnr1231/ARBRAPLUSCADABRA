@@ -8,6 +8,8 @@ public class PlayerMain : MonoCharacter, IDamageable
 {
 	private Dictionary<Type, IPlayerComponent> _components;
 
+	public event Action OnSetUpPlayer;
+
 	private void Awake()
 	{
 		_components = new Dictionary<Type, IPlayerComponent>();
@@ -23,7 +25,7 @@ public class PlayerMain : MonoCharacter, IDamageable
 			compo.Initialize(this);
 		}
 
-		MapManager.OnCompleteLoadingMap += SetUpPlayer;
+		MapManager.OnCompleteLoadingMap += SetUpPlayerMain;
 	}
 
 	public T GetCompo<T>() where T : class
@@ -33,13 +35,13 @@ public class PlayerMain : MonoCharacter, IDamageable
 		return default(T);
 	}
 	
-	public void SetUpPlayer()
+	public void SetUpPlayerMain()
 	{
 		CurrentHP = MaxHP;
 
 		CurrentTileNumber = new Vector2Int(3, 3);
 
-		transform.position = MapManager.Instance.SettedTiles[CurrentTileNumber].ReturnTilePosition();
+		OnSetUpPlayer?.Invoke();
 	}
 
 	#region Damageable Methods

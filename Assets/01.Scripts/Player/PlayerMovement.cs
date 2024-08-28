@@ -31,7 +31,8 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 	public void Initialize(PlayerMain player)
 	{
 		_player = player;
-		
+		_player.OnSetUpPlayer += SetUpPlayerMovement;
+
 		CanMove = true;
 		IsMove = false;
 		CanCasting = true;
@@ -43,6 +44,12 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 	private void Update()
 	{
 		HandleInput();
+	}
+
+	private void SetUpPlayerMovement()
+	{
+		//Addind Activate Method's when Player Reset
+		CheckAndMoveToTile(false);
 	}
 
 	private void HandleInput()
@@ -70,6 +77,7 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 
 	private void MovePlayer(Vector2Int moveTo)
 	{
+		MapManager.Instance.SettedTiles[_player.CurrentTileNumber].SetOnCharacter(null);
 		_player.CurrentTileNumber.x += moveTo.x;
 		_player.CurrentTileNumber.y += moveTo.y;
 
@@ -78,7 +86,7 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 		CheckAndMoveToTile();
 	}
 
-	private void CheckAndMoveToTile(bool UseDotween = true)
+	public void CheckAndMoveToTile(bool UseDotween = true)
 	{
 		if (MapManager.Instance.SettedTiles.TryGetValue(_player.CurrentTileNumber, out TileBase movedTile))
 		{
@@ -90,6 +98,8 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 			{
 				transform.position = movedTile.ReturnTilePosition();
 			}
+
+			MapManager.Instance.SettedTiles[_player.CurrentTileNumber].SetOnCharacter(_player);
 		}
 	}
 

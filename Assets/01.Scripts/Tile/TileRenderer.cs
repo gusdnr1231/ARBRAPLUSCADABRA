@@ -11,8 +11,8 @@ public class TileRenderer : MonoBehaviour
 
 	[Header("Tile Renderer Datas")]
 	[SerializeField] private Sprite[] TileSprites;
-	[SerializeField] private Color[] OutlineColors;
-	[SerializeField] private Color[] GlowColors;
+	[SerializeField][ColorUsage(true, true)] private Color[] OutlineColors;
+	[SerializeField][ColorUsage(true, true)] private Color[] GlowColors;
 
 	[Header("Tile Rendering Values")]
 	[SerializeField] private float OutlineDuration = 0.5f;

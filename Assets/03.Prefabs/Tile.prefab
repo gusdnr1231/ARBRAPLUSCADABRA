@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 249793405262438060}
   - component: {fileID: 7622908050002837971}
   - component: {fileID: 8332547858181540487}
+  - component: {fileID: 6639035786788024376}
   - component: {fileID: 6566774233900723627}
   m_Layer: 0
   m_Name: Tile
@@ -104,10 +105,32 @@ MonoBehaviour:
     TilePositionY: 0
     InstanceTileState: 0
     OnCharacter: {fileID: 0}
+--- !u!114 &6639035786788024376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5485051376514546693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9ba83fbddc0b374d976989f37bce710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   TileSprites:
   - {fileID: 1126057842, guid: 27732de6d3a4dd54b8cce4eb79851306, type: 3}
   - {fileID: 532406266, guid: 27732de6d3a4dd54b8cce4eb79851306, type: 3}
   - {fileID: 1741791338, guid: 27732de6d3a4dd54b8cce4eb79851306, type: 3}
+  OutlineColors:
+  - {r: 2, g: 2, b: 2, a: 1}
+  - {r: 0, g: 0.61504173, b: 2, a: 1}
+  - {r: 1.0666666, g: 0.07631508, b: 0.07631508, a: 1}
+  GlowColors:
+  - {r: 2, g: 2, b: 2, a: 1}
+  - {r: 0, g: 0.16108894, b: 2, a: 1}
+  - {r: 1.290566, g: 0.07000269, b: 0, a: 1}
+  OutlineDuration: 0.5
+  GlowDuration: 0.5
 --- !u!95 &6566774233900723627
 Animator:
   serializedVersion: 5

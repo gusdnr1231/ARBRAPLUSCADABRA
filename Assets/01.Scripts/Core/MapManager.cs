@@ -26,7 +26,6 @@ public class MapManager : MonoSingleton<MapManager>
 
 	private void Update()
 	{
-		Debug.Log(MappingCoroutine == null);
 		if (Input.GetKeyDown(KeyCode.Q) && MappingCoroutine == null)
 		{
 			MappingCoroutine = StartCoroutine(SetActiveMapTile(!isActiveMap));
@@ -44,11 +43,12 @@ public class MapManager : MonoSingleton<MapManager>
 				TilePosition = new Vector2(StartPosition.x - countX + countY, StartPosition.y - (0.5f * countX) - (0.5f * countY));
 				TileBase NewTile = Instantiate(TileObject, TilePosition, Quaternion.identity);
 
+				TileArrayNumber = new Vector2Int(countX, countY);
+				NewTile.SetUpTileData(TileArrayNumber.x, TileArrayNumber.y, TileState.None);
+
 				NewTile.transform.SetParent(TileContainer, false);
 				NewTile.gameObject.name = NewTile.gameObject.name.Replace("(Clone)", "");
 				
-				TileArrayNumber = new Vector2Int(countX, countY);
-				NewTile.SetUpTileData(TileArrayNumber.x, TileArrayNumber.y, TileState.None);
 				SettedTiles.TryAdd(TileArrayNumber, NewTile);
 
 				yield return new WaitForSeconds(0.001f);

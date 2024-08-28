@@ -41,12 +41,13 @@ public class TileBase : MonoBehaviour
 
 	public void SetUpTileData(int InitPositionX, int InitPositionY, TileState InitState)
     {
-        _tileRenderer.Initialize(this);
-
 		M_TileData = new TileData() { TileInstance = this };
         M_TileData.TilePositionX = InitPositionX;
         M_TileData.TilePositionY = InitPositionY;
         if(InitState != TileState.End) M_TileData.InstanceTileState = InitState;
+        
+		if(_tileRenderer == null) TryGetComponent(out _tileRenderer);
+        _tileRenderer.Initialize(this);
 
         SetActiveTile?.Invoke(true);
     }
@@ -67,7 +68,13 @@ public class TileBase : MonoBehaviour
 	public void SetOnCharacter(MonoCharacter character)
 	{
 		M_TileData.OnCharacter = character;
-		isOnCharacter = M_TileData.OnCharacter.TryGetComponent(out OnCharacterDamageable);
+
+        if(M_TileData.OnCharacter == null) OnStateChange?.Invoke(TileState.None);
+        else if(M_TileData.OnCharacter != null)
+        {
+			OnStateChange?.Invoke((TileState)character.Character_Type);
+			isOnCharacter = M_TileData.OnCharacter.TryGetComponent(out OnCharacterDamageable);
+		}
 	}
 
     public void ActiveDamageable(int value, HighSpellTypeEnum spellType, bool isAttack = true)
