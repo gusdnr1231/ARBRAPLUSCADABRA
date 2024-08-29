@@ -16,7 +16,7 @@ public class MapManager : MonoSingleton<MapManager>, IManagerComponent
 	public Dictionary<Vector2Int, TileBase> SettedTiles = new Dictionary<Vector2Int, TileBase>();
 	public static Action OnCompleteLoadingMap;
 
-	private bool isActiveMap;
+	public bool isActiveMap { get; private set; } = false;
 	private Coroutine MappingCoroutine;
 
 	private Managers _mngs;
@@ -29,23 +29,15 @@ public class MapManager : MonoSingleton<MapManager>, IManagerComponent
 
 		_spellMng = _mngs.GetManager<SpellManager>();
 		_gameMng = _mngs.GetManager<GameManager>();
-	}
 
-	private void Start()
-	{
 		MappingCoroutine = StartCoroutine(SetMapTile());
 	}
 
-	/*private void Update()
-	{
-		if (Input.GetKeyDown(KeyCode.Q) && MappingCoroutine == null)
-		{
-			MappingCoroutine = StartCoroutine(SetActiveMapTile(!isActiveMap));
-		}
-	}*/
-
 	private IEnumerator SetMapTile()
 	{
+		isActiveMap = false;
+
+
 		Vector2 TilePosition;
 		Vector2Int TileArrayNumber;
 		for (int countX = 0; countX < MapSize; countX++)

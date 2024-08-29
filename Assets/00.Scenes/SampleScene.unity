@@ -1765,6 +1765,7 @@ MonoBehaviour:
   CurrentMoveable: 3
   MaxMoveable: 999
   PassTime: 2
+  TurnTxt: {fileID: 1631371374}
 --- !u!1 &1501893951
 GameObject:
   m_ObjectHideFlags: 0
@@ -1943,7 +1944,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "2\uCC28\uB840 \uC9F8"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 212e5f7396174b0499e640113efb0051, type: 2}
   m_sharedMaterial: {fileID: -2739483453992503786, guid: 212e5f7396174b0499e640113efb0051, type: 2}

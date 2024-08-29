@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 
 	private void Update()
 	{
-		if(_gameMng.IsPassingNextTurn == false) HandleInput();
+		if(_gameMng.IsPassingNextTurn == false && _mapMng.isActiveMap == true) HandleInput();
 	}
 
 	private void SetUpPlayerMovement()

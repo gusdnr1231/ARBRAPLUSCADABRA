@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +17,9 @@ public class GameManager : MonoSingleton<GameManager>, IManagerComponent
 	public int MaxMoveable = 999;
 	[Tooltip("턴이 넘어갈 시 기다리는 시간")]
 	[Range(0.1f, 10f)] public float PassTime = 2.0f;
+
+	[Header("UI Elements")]
+	[SerializeField] private TMPro.TMP_Text TurnTxt;
 
 	private int TurnCount;
 	public bool IsPassingNextTurn { get; private set; } = false;
@@ -62,6 +66,8 @@ public class GameManager : MonoSingleton<GameManager>, IManagerComponent
 	{
 		TurnCount = TurnCount + 1;
 
+		StartCoroutine(ShowTurnText());
+
 		CurrentMoveable = 3;
 	}
 
@@ -82,5 +88,21 @@ public class GameManager : MonoSingleton<GameManager>, IManagerComponent
 	{
 		CurrentMoveable = Mathf.Clamp(CurrentMoveable - minus, 0, MaxMoveable);
 		if(CurrentMoveable <= 0) ActiveNextTurn();
+	}
+
+	private IEnumerator ShowTurnText()
+	{
+		TurnTxt.transform.localScale = Vector3.zero;
+		TurnTxt.transform.DOScale(1, 0.5f).SetEase(Ease.OutBack)
+			.OnStart(() =>
+			{
+				TurnTxt.text = $"{TurnCount}번째 턴";
+			});
+		yield return new WaitForSeconds(1f);
+		TurnTxt.transform.DOScale(0, 0.5f).SetEase(Ease.OutBack)
+			.OnStart(() =>
+			{
+				TurnTxt.text = string.Empty;
+			});
 	}
 }

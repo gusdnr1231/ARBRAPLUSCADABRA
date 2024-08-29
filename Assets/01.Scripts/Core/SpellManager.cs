@@ -131,7 +131,7 @@ public class SpellManager : MonoSingleton<SpellManager>, IManagerComponent
 		ClearHand(LowSpellHand);
 		ClearHand(HighSpellHand);
 		
-		if(UsedLowSpell != null) ResetTileSprite();
+		if(UsedLowSpell == null) ResetTileSprite();
 	}
 
 	private void ClearHand(List<ScrollCard> hand) // 해당하는 리스트의 현재 보유 중인 카드 초기화
