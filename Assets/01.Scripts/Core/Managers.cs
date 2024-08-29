@@ -1,7 +1,6 @@
+using DG.Tweening;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Managers : MonoSingleton<Managers>
 {
@@ -10,6 +9,8 @@ public class Managers : MonoSingleton<Managers>
 	public override void Awake()
 	{
 		base.Awake();
+
+		DOTween.SetTweensCapacity(1000, 50);
 
 		_components = new Dictionary<Type, IManagerComponent>();
 

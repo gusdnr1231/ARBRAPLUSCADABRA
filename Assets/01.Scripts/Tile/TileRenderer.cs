@@ -105,20 +105,22 @@ public class TileRenderer : MonoBehaviour
 
 	public void SetOutlineFade(float end)
 	{
+		TileMaterial.DOKill();
 		TileMaterial.DOFloat(end, "_PixelOutlineFade", OutlineDuration);
 	}
 
 	public void SetOutlineColor(Color color)
 	{
-		TileMaterial.DOColor(color, "_PixelOutlineColor", OutlineDuration);
+		TileMaterial.SetColor("_PixelOutlineColor", color);
 	}
 	public void SetGlowFade(float end)
 	{
+		TileMaterial.DOKill();
 		TileMaterial.DOFloat(end, "_SineGlowFade", GlowDuration);
 	}
 
 	public void SetGlowColor(Color color)
 	{
-		TileMaterial.DOColor(color, "_SineGlowColor", GlowDuration);
+		TileMaterial.SetColor("_SineGlowColor", color);
 	}
 }

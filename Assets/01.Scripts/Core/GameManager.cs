@@ -40,10 +40,10 @@ public class GameManager : MonoSingleton<GameManager>, IManagerComponent
 		_spellMng = _mngs.GetManager<SpellManager>();
 			
 		_mapMng = _mngs.GetManager<MapManager>();
-		MapManager.OnCompleteLoadingMap += StartGame;
+		MapManager.OnCompleteLoadingMap += ResetTurn;
 	}
 
-	public void StartGame()
+	public void ResetTurn()
 	{
 		TurnCount = 0;
 

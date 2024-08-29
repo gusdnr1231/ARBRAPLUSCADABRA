@@ -98,13 +98,13 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 			if (UseDotween)
 			{
 				MoveWithDotween(movedTile);
+				_gameMng.UseMoveable();
 			}
 			else
 			{
 				transform.position = movedTile.ReturnTilePosition();
 			}
 			_mapMng.SettedTiles[_player.CurrentTileNumber].SetOnCharacter(_player);
-			_gameMng.UseMoveable();
 		}
 	}
 
