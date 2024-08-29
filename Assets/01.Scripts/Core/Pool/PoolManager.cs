@@ -20,7 +20,7 @@ public class PoolManager : MonoSingleton<PoolManager>
 	[Header("Pool Values")]
 	[SerializeField] private PoolListStruct[] DataStruct;
 
-	private PoolListSO CurrentFloorPoolData;
+	private PoolListSO CurrentPoolingData;
 	public event Action OnPoolingComplete;
 
 	private Dictionary<string, PoolListSO> PoolListData = new Dictionary<string, PoolListSO>();
@@ -29,11 +29,15 @@ public class PoolManager : MonoSingleton<PoolManager>
 
 	public override void Awake()
 	{
-		DontDestroyOnLoad(PoolParent_Object);
-		DontDestroyOnLoad(PoolParent_Effect);
-		DontDestroyOnLoad(PoolParent_UI);
-
 		SetDataListInDictionary();
+	}
+
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.R))
+		{
+			DestroyObjectsInPool("ScrollCard");
+		}
 	}
 
 	public void SetDataListInDictionary()
@@ -45,7 +49,9 @@ public class PoolManager : MonoSingleton<PoolManager>
 			{
 				PoolListData.Add(structData.PoolingListName, structData.PoolData);
 				PoolingListNames.Add(structData.PoolingListName);
+				SetDataOnStruct(structData.PoolingListName);
 			}
+
 		}
 	}
 
@@ -58,23 +64,26 @@ public class PoolManager : MonoSingleton<PoolManager>
 		}
 		if (isReset == true) ClearPreviousData();
 
-		CurrentFloorPoolData = PoolListData[floorName];
+		CurrentPoolingData = PoolListData[floorName];
 
 		StartPooling();
 	}
+
+	#region Destroy Methods
 
 	public void DestroyObjectsInPool(string poolableName)
 	{
 		if (CompletePoolableMonos.ContainsKey(poolableName))
 		{
-			CompletePoolableMonos[poolableName].DestroyAll();
+			CompletePoolableMonos.TryGetValue(poolableName, out Pool<PoolableMono> value);
+			value.DestroyAll();
+			CompletePoolableMonos.Remove(poolableName);
 		}
 		else
 		{
 			Debug.LogWarning($"No pool found for {poolableName}");
 		}
 	}
-
 
 	public void ClearPreviousData()
 	{
@@ -100,16 +109,23 @@ public class PoolManager : MonoSingleton<PoolManager>
 		}
 	}
 
+	public void DestroyAllActiveObjects() // 현재 모든 생성된 오브젝트들 제거
+	{
+		foreach (var pool in CompletePoolableMonos.Values)
+		{
+			pool.DestroyAll(); // Destroy All Object In Pool
+		}
+	}
+
+	#endregion
+
 	private void StartPooling()
 	{
-		foreach (PoolDataStruct pds in CurrentFloorPoolData.DataStruct)
+		Pool<PoolableMono> poolTemp = new Pool<PoolableMono>(null, null, 0);
+		foreach (PoolDataStruct pds in CurrentPoolingData.DataStruct)
 		{
-			if (pds.poolableType == PoolableType.None ||
-				pds.poolableType == PoolableType.End) Debug.LogError($" PoolableType is Null.");
 			if (pds.poolableMono == null) Debug.LogError($" PoolableMono is Null.");
 			if (pds.Count <= 0) Debug.LogError($" Count is Wrong Value");
-
-			Pool<PoolableMono> poolTemp = new Pool<PoolableMono>(null, null, 0);
 			
 			switch (pds.poolableType)
 			{
@@ -136,7 +152,6 @@ public class PoolManager : MonoSingleton<PoolManager>
 			}
 
 			CompletePoolableMonos.TryAdd(pds.poolableName, poolTemp);
-
 		}
 		
 		OnPoolingComplete?.Invoke();
@@ -177,21 +192,13 @@ public class PoolManager : MonoSingleton<PoolManager>
 		return item;
 	}
 
-	public void Push(PoolableMono item, string PoolableName)
+	public void Push(PoolableMono item)
 	{
-		if (CompletePoolableMonos[PoolableName] == null)
+		if (CompletePoolableMonos[item.PoolName] == null)
 		{
-			Debug.LogError($"Named {PoolableName} Object is Null");
+			Debug.LogError($"Named {item.PoolName} Object is Null");
 			return;
 		}
-		CompletePoolableMonos[PoolableName].Push(item);
-	}
-	
-	public void DestroyAllActiveObjects()
-	{
-		foreach (var pool in CompletePoolableMonos.Values)
-		{
-			pool.DestroyAll(); // Destroy All Object In Pool
-		}
+		CompletePoolableMonos[item.PoolName].Push(item);
 	}
 }

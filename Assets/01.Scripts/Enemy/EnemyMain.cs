@@ -29,6 +29,25 @@ public class EnemyMain : MonoCharacter, IDamageable
 	{
 		CurrentHP = MaxHP;
 		CurrentPatience = MaxPatience;
+
+		UpdatePatience();
+	}
+
+	public void UpdateTurn()
+	{
+		CurrentPatience = CurrentPatience - 1;
+
+		UpdatePatience();
+	}
+
+	public void UpdatePatience()
+	{
+		PatienceTxt.text = CurrentPatience.ToString();
+		if (CurrentPatience <= 1) PatienceTxt.color = Color.red;
+		else if (CurrentPatience > 1) PatienceTxt.color = Color.white;
+		
+		if (CurrentPatience == 1) NoticeAttack();
+		if (CurrentPatience == 0) ActiveAttack();
 	}
 
 	public void NoticeAttack()
@@ -38,7 +57,7 @@ public class EnemyMain : MonoCharacter, IDamageable
 
 	public void ActiveAttack()
 	{
-
+		CurrentPatience = MaxPatience;
 	}
 
 	public void TakeDamage(float damage, HighSpellTypeEnum AttackedType)

@@ -5,21 +5,30 @@ using System.Collections.Generic;
 using System.Text;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
-public class SpellManager : MonoSingleton<SpellManager>
+public class SpellManager : MonoSingleton<SpellManager>, IManagerComponent
 {
-	[Header("ScrollCard Datas")]
-	[SerializeField] private string ScrollPoolName = "ScrollCard";
+	private readonly string ScrollPoolName = "ScrollCard";
+
+	[Header("ScrollCard Values")]
 	[SerializeField][Range(0.1f, 2f)] private float CardSize = 1f;
 	[SerializeField][Range(1f, 3f)] private float EnLargeCardSize = 2f;
 	[SerializeField][Range(0f, 1f)] private float CardMoveDuration = 0.3f;
 
 	[Header("Transforms")]
+	[Tooltip("스크롤 생성 위치")]
 	[SerializeField] private Transform CardSpawnPosition;
+	[Space]
+	[Tooltip("스크롤 정렬 - High")]
 	[SerializeField] private Transform HighSpellTop;
+	[Tooltip("스크롤 정렬 - High")]
 	[SerializeField] private Transform HighSpellBottom;
+	[Space]
+	[Tooltip("스크롤 정렬 - Low")]
 	[SerializeField] private Transform LowSpellTop;
+	[Tooltip("스크롤 정렬 - Low")]
 	[SerializeField] private Transform LowSpellBottom;
 
 	[Header("Using ScrollCard Values")]
@@ -28,39 +37,56 @@ public class SpellManager : MonoSingleton<SpellManager>
 	[SerializeField] private float SpellInactiveDuration = 0.5f;
 
 	[Header("Spell Datas")]
-	public List<MonoSpellBase> PlayerDeck = new List<MonoSpellBase>();
+	[SerializeField] private int MaxHighSpell = 5;
+	[SerializeField] private int MaxLowSpell = 5;
+	public List<HighSpellBase> HighSpellDeck = new List<HighSpellBase>();
+	public List<LowSpellBase> LowSpellDeck = new List<LowSpellBase>();
 	public List<ScrollCard> LowSpellHand = new List<ScrollCard>();
 	public List<ScrollCard> HighSpellHand = new List<ScrollCard>();
+
+	[Header("Spell UI Elements")]
+	[SerializeField] private TMPro.TMP_Text SpellSentenceTxt;
+	public int ManaOverlapFigure = 0;
 
 	public LowSpellBase UsedLowSpell { get; set; }
 	public HighSpellBase UsedHighSpell { get; set; }
 
 	private ScrollCard SelectedScroll = null;
-	private PlayerMain Player;
 
 	private bool isScrollDraging = false;
 	private bool onPlayerScrollZone = false;
 
-	private void Start()
+	private PlayerMain Player;
+
+	private Managers _mngs;
+	private GameManager _gameMng;
+	private MapManager _mapMng;
+
+	public void Initialize(Managers managers)
 	{
-		ClearPlayerHand();
+		_mngs = managers;
 
 		Player = FindObjectOfType<PlayerMain>().GetComponent<PlayerMain>();
+
+		_mapMng = _mngs.GetManager<MapManager>();
+
+		_gameMng = _mngs.GetManager<GameManager>();
+		_gameMng.OnUpdatePlayerHand += DrawScrollPair;
+		_gameMng.EndTurn += CompleteClear;
+
+		ManaOverlapFigure = 0;
 	}
 
 	private void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.C))
-		{
-			AddCard();
-		}
+		if(_gameMng.IsPassingNextTurn == true) return;
+		
+		DetectCardArea();
 
 		if (isScrollDraging)
 		{
 			ScrollDrag();
 		}
-
-		DetectCardArea();
 	}
 
 	private void ScrollDrag()
@@ -100,42 +126,65 @@ public class SpellManager : MonoSingleton<SpellManager>
 
 	#region Player Hand Methods
 
-	public void ClearPlayerHand()
+	public void CompleteClear()
 	{
-		if (LowSpellHand != null)
-		{
-			for (int count = 0; count < LowSpellHand.Count; count++) Destroy(LowSpellHand[count].gameObject);
-			LowSpellHand.Clear();
-		}
-		else if (LowSpellHand == null) LowSpellHand = new List<ScrollCard>();
-
-		if (HighSpellHand != null)
-		{
-			for (int count = 0; count < HighSpellHand.Count; count++) Destroy(HighSpellHand[count].gameObject);
-			HighSpellHand.Clear();
-		}
-		else if (HighSpellHand == null) HighSpellHand = new List<ScrollCard>();
+		ClearHand(LowSpellHand);
+		ClearHand(HighSpellHand);
+		
+		if(UsedLowSpell != null) ResetTileSprite();
 	}
 
-	public void AddCard()
+	private void ClearHand(List<ScrollCard> hand) // 해당하는 리스트의 현재 보유 중인 카드 초기화
 	{
-		PoolManager.Instance.Pop(ScrollPoolName, CardSpawnPosition.position).TryGetComponent(out ScrollCard addCardObject);
-
-		addCardObject.InitSpellData(PlayerDeck[Random.Range(0, PlayerDeck.Count)]);
-
-		SpellTypeEnum InitSpellType = addCardObject.ScrollSpellData.SpellType;
-
-		switch (InitSpellType)
+		if (hand != null)
 		{
-			case SpellTypeEnum.Low: LowSpellHand.Add(addCardObject); break;
-			case SpellTypeEnum.High: HighSpellHand.Add(addCardObject); break;
+			for (int count = 0; count < hand.Count; count++)
+			{
+				PoolManager.Instance.Push(hand[count]);
+			}
+			hand.Clear();
+		}
+		else
+		{
+			hand = new List<ScrollCard>();
+		}
+	}
+
+	public void DrawScrollPair(int ScrollCount)
+	{
+		for(int count = 0; count < ScrollCount; count++)
+		{
+			DrawOneScroll(SpellTypeEnum.Low);
+			DrawOneScroll(SpellTypeEnum.High);
+		}
+	}
+
+	public void DrawOneScroll(SpellTypeEnum AddScrollType)
+	{
+		PoolManager.Instance.Pop(ScrollPoolName, CardSpawnPosition.position).TryGetComponent(out ScrollCard DrawScroll);
+
+		switch (AddScrollType)
+		{
+			case SpellTypeEnum.Low:
+				DrawScroll.InitSpellData(PickOneSpellInDeck(LowSpellDeck));
+				LowSpellHand.Add(DrawScroll);
+				break;
+			case SpellTypeEnum.High:
+				DrawScroll.InitSpellData(PickOneSpellInDeck(HighSpellDeck));
+				HighSpellHand.Add(DrawScroll);
+				break;
 			default: break;
 		}
 
-		SetSortingOrder(InitSpellType);
-		ScrollAlignment(InitSpellType);
+		SetSortingOrder(AddScrollType);
+		ScrollAlignment(AddScrollType);
 	}
-	
+
+	public T PickOneSpellInDeck<T>(List<T> Deck) where T : class
+	{
+		return Deck[Random.Range(0, Deck.Count)];
+	}
+
 	public void RemoveCard(ScrollCard RemoveCard)
 	{
 		SpellTypeEnum InitSpellType = RemoveCard.ScrollSpellData.SpellType;
@@ -147,7 +196,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 			default: break;
 		}
 
-		Destroy(RemoveCard.gameObject);
+		PoolManager.Instance.Push(RemoveCard);
 
 		SetSortingOrder(InitSpellType);
 		ScrollAlignment(InitSpellType);
@@ -293,9 +342,6 @@ public class SpellManager : MonoSingleton<SpellManager>
 
 	#region Use Scroll
 
-	[Header("Testing Reference")]
-	[SerializeField] private TMPro.TMP_Text TestingTMP;
-
 	public void CastSpellBase(MonoSpellBase CastingSpell)
 	{
 		if(Player.GetCompo<PlayerMovement>().CanCasting == false) return;
@@ -325,21 +371,24 @@ public class SpellManager : MonoSingleton<SpellManager>
 
 		if (UsedHighSpell != null && UsedLowSpell != null)
 		{
-			ActiveSpell();
+			ActivePlayerSpell();
+			ManaOverlapFigure = ManaOverlapFigure + UsedHighSpell.CollectMP + UsedLowSpell.CollectMP;
+			Debug.Log(ManaOverlapFigure);
 		}
 	}
 
-	private void ActiveSpell()
+	private void ActivePlayerSpell()
 	{
 		Player.GetCompo<PlayerMovement>().CanCasting = false;
 
+		_gameMng.UseMoveable();
 		ActiveAttack(TileState.PlayerAttack);
 		StartCoroutine(ShowSpellSentence(MixSpellSentence(), true));
 	}
 
 	private void ActiveAttack(TileState AttackBy)
 	{
-		Vector2Int AttackedTilePosition = Vector2Int.zero;
+		Vector2Int AttackedTile = Vector2Int.zero;
 		for (int XCount = 0; XCount < UsedLowSpell.AttackZone.Count; XCount++)
 		{
 			for (int YCount = 0; YCount < UsedLowSpell.AttackZone[XCount].Line.Count; YCount++)
@@ -364,7 +413,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 				if (InitLowSpell.AttackZone[XCount].Line[YCount] == true)
 				{
 					AttackedTilePosition.Set(XCount, YCount);
-					MapManager.Instance.SettedTiles[AttackedTilePosition].UpdateTileState(AttackBy);
+					_mapMng.SettedTiles[AttackedTilePosition].UpdateTileState(AttackBy);
 				}
 			}
 		}
@@ -372,7 +421,7 @@ public class SpellManager : MonoSingleton<SpellManager>
 
 	private void ResetTileSprite()
 	{
-		foreach (TileBase TileData in MapManager.Instance.SettedTiles.Values)
+		foreach (TileBase TileData in _mapMng.SettedTiles.Values)
 		{
 			TileData.ResetTileRender();
 		}
@@ -380,23 +429,23 @@ public class SpellManager : MonoSingleton<SpellManager>
 
 	private IEnumerator ShowSpellSentence(string Sentence, bool isAttack = false)
 	{
-		TestingTMP.text = "";
-		TestingTMP.transform.localScale = Vector3.zero;
+		SpellSentenceTxt.text = "";
+		SpellSentenceTxt.transform.localScale = Vector3.zero;
 
-		TestingTMP.transform.DOScale(1, 0.2f).SetEase(Ease.OutBack)
+		SpellSentenceTxt.transform.DOScale(1, 0.2f).SetEase(Ease.OutBack)
 			.OnStart(() =>
 			{
-				TestingTMP.text = Sentence;
+				SpellSentenceTxt.text = Sentence;
 			});
 
 		yield return new WaitForSeconds(1f);
 
 		if (isAttack == true)
 		{
-			TestingTMP.transform.DOScale(0, 0.5f).SetEase(Ease.OutQuint)
+			SpellSentenceTxt.transform.DOScale(0, 0.5f).SetEase(Ease.OutQuint)
 				.OnStart(() =>
 				{
-					TestingTMP.text = "";
+					SpellSentenceTxt.text = "";
 
 					UsedLowSpell = null;
 					UsedHighSpell = null;

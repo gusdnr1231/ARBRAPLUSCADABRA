@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapManager : MonoSingleton<MapManager>
+public class MapManager : MonoSingleton<MapManager>, IManagerComponent
 {
 	[Header("Containers")]
 	[SerializeField] private Transform TileContainer;
@@ -19,18 +19,30 @@ public class MapManager : MonoSingleton<MapManager>
 	private bool isActiveMap;
 	private Coroutine MappingCoroutine;
 
+	private Managers _mngs;
+	private SpellManager _spellMng;
+	private GameManager _gameMng;
+
+	public void Initialize(Managers managers)
+	{
+		_mngs = managers;
+
+		_spellMng = _mngs.GetManager<SpellManager>();
+		_gameMng = _mngs.GetManager<GameManager>();
+	}
+
 	private void Start()
 	{
 		MappingCoroutine = StartCoroutine(SetMapTile());
 	}
 
-	private void Update()
+	/*private void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Q) && MappingCoroutine == null)
 		{
 			MappingCoroutine = StartCoroutine(SetActiveMapTile(!isActiveMap));
 		}
-	}
+	}*/
 
 	private IEnumerator SetMapTile()
 	{
@@ -77,4 +89,5 @@ public class MapManager : MonoSingleton<MapManager>
 		isActiveMap = isActive;
 		MappingCoroutine = null;
 	}
+
 }

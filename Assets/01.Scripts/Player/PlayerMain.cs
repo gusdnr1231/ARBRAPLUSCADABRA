@@ -10,9 +10,13 @@ public class PlayerMain : MonoCharacter, IDamageable
 
 	public event Action OnSetUpPlayer;
 
+	[HideInInspector] public Managers mngs;
+
 	private void Awake()
 	{
 		_components = new Dictionary<Type, IPlayerComponent>();
+
+		if (mngs == null) mngs = Managers.GetInstacne();
 
 		IPlayerComponent[] comArr = GetComponentsInChildren<IPlayerComponent>();
 		foreach (var component in comArr)
@@ -26,6 +30,11 @@ public class PlayerMain : MonoCharacter, IDamageable
 		}
 
 		MapManager.OnCompleteLoadingMap += SetUpPlayerMain;
+	}
+
+	private void OnDisable()
+	{
+		MapManager.OnCompleteLoadingMap -= SetUpPlayerMain;
 	}
 
 	public T GetCompo<T>() where T : class

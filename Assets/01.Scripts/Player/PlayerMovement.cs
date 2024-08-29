@@ -28,6 +28,9 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 	private PlayerMain _player;
 	private PlayerAnimator _playerAnimator;
 
+	private MapManager _mapMng;
+	private GameManager _gameMng;
+
 	public void Initialize(PlayerMain player)
 	{
 		_player = player;
@@ -38,12 +41,14 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 		CanCasting = true;
 		OnCasting = false;
 
+		_mapMng = _player.mngs.GetManager<MapManager>();
+		_gameMng = _player.mngs.GetManager<GameManager>();
 		_playerAnimator = _player.GetCompo<PlayerAnimator>();
 	}
 
 	private void Update()
 	{
-		HandleInput();
+		if(_gameMng.IsPassingNextTurn == false) HandleInput();
 	}
 
 	private void SetUpPlayerMovement()
@@ -77,7 +82,7 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 
 	private void MovePlayer(Vector2Int moveTo)
 	{
-		MapManager.Instance.SettedTiles[_player.CurrentTileNumber].SetOnCharacter(null);
+		_mapMng.SettedTiles[_player.CurrentTileNumber].SetOnCharacter(null);
 		_player.CurrentTileNumber.x += moveTo.x;
 		_player.CurrentTileNumber.y += moveTo.y;
 
@@ -88,7 +93,7 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 
 	public void CheckAndMoveToTile(bool UseDotween = true)
 	{
-		if (MapManager.Instance.SettedTiles.TryGetValue(_player.CurrentTileNumber, out TileBase movedTile))
+		if (_mapMng.SettedTiles.TryGetValue(_player.CurrentTileNumber, out TileBase movedTile))
 		{
 			if (UseDotween)
 			{
@@ -98,7 +103,8 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 			{
 				transform.position = movedTile.ReturnTilePosition();
 			}
-			MapManager.Instance.SettedTiles[_player.CurrentTileNumber].SetOnCharacter(_player);
+			_mapMng.SettedTiles[_player.CurrentTileNumber].SetOnCharacter(_player);
+			_gameMng.UseMoveable();
 		}
 	}
 
@@ -113,7 +119,6 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 			.OnComplete(() =>
 			{
 				IsMove = false;
-				Debug.Log($"Move End : CanMove[{CanMove}]");
 			});
 	}
 }

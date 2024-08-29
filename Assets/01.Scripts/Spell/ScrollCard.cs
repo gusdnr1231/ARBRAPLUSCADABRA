@@ -21,6 +21,7 @@ public class ScrollCard : PoolableMono
 
     private StringBuilder FigureBuilder = new StringBuilder();
 
+	private SpellManager spellMngs;
 
 	public override void ResetPoolableMono()
 	{
@@ -28,6 +29,7 @@ public class ScrollCard : PoolableMono
 
 	public override void EnablePoolableMono()
 	{
+		if (spellMngs == null) spellMngs = Managers.Instance.GetManager<SpellManager>();
 	}
 
 
@@ -80,22 +82,22 @@ public class ScrollCard : PoolableMono
 
 	private void OnMouseOver()
 	{
-        SpellManager.Instance.ScrollMouseOver(this);		
+		spellMngs.ScrollMouseOver(this);		
 	}
 
 	private void OnMouseExit()
 	{
-        SpellManager.Instance.ScrollMouseExit(this);
+		spellMngs.ScrollMouseExit(this);
 	}
 
 	private void OnMouseUp()
 	{
-        SpellManager.Instance.ScrollMouseUp();
+		spellMngs.ScrollMouseUp();
 	}
 
 	private void OnMouseDown()
 	{
-		SpellManager.Instance.ScrollMouseDown(this.ScrollSpellData);
+		spellMngs.ScrollMouseDown(this.ScrollSpellData);
 	}
 
 	#endregion
