@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using static UnityEditor.VersionControl.Asset;
 
 [System.Serializable]
 public struct AttackZoneElement
@@ -15,5 +11,6 @@ public struct AttackZoneElement
 public class LowSpellBase : MonoSpellBase
 {
 	[Header("Low Spell Value")]
-	public List<AttackZoneElement> AttackZone = new List<AttackZoneElement>(7);
+	[Range(0, 10)] public int MapSize = 7;
+	public List<AttackZoneElement> AttackZone;
 }

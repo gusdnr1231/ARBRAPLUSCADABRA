@@ -17,11 +17,12 @@ MonoBehaviour:
   SpellIcon: {fileID: 21300000, guid: e0064697884a45541bb68b8a38bf853d, type: 3}
   CollectMP: 7
   Damage: 3
+  MapSize: 6
   AttackZone:
-  - Line: 01010101010101
-  - Line: 00000101010000
-  - Line: 00000101010000
-  - Line: 01010101010101
-  - Line: 00000101010000
-  - Line: 00000101010000
-  - Line: 01010101010101
+  - Line: 01010001000101
+  - Line: 01010001000101
+  - Line: 01010001000101
+  - Line: 01000101010001
+  - Line: 01000101010001
+  - Line: 01000101010001
+  - Line: 01010001000101

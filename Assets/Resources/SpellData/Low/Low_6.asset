@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1005764bd405ee40991142839ed941c, type: 3}
-  m_Name: Low_3
+  m_Name: Low_6
   m_EditorClassIdentifier: 
-  SpellType: 1
-  SpellName: "\uC138\uCE7C\uB86C"
-  SpellIcon: {fileID: 21300000, guid: 76780e6ee2f1c374c9db7b6c54575c9e, type: 3}
-  CollectMP: 13
-  Damage: 16
+  SpellType: 0
+  SpellName: 
+  SpellIcon: {fileID: 0}
+  CollectMP: 0
+  Damage: 0
   MapSize: 7
   AttackZone:
-  - Line: 01010100010101
-  - Line: 01010100010101
-  - Line: 01010100010101
   - Line: 00000000000000
-  - Line: 01010100010101
-  - Line: 01010100010101
-  - Line: 01010100010101
+  - Line: 00000000000000
+  - Line: 00000000000000
+  - Line: 00000000000000
+  - Line: 00000000000000
+  - Line: 00000000000000
+  - Line: 00000000000000

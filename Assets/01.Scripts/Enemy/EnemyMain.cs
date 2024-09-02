@@ -57,6 +57,8 @@ public class EnemyMain : MonoCharacter, IDamageable
 
 	public void ActiveAttack()
 	{
+
+
 		CurrentPatience = MaxPatience;
 	}
 

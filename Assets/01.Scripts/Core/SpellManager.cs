@@ -32,7 +32,7 @@ public class SpellManager : MonoSingleton<SpellManager>, IManagerComponent
 	[SerializeField] private Transform LowSpellBottom;
 
 	[Header("Using ScrollCard Values")]
-	[SerializeField] private LayerMask ExceptionLayer;
+	[SerializeField] private string ExceptionLayerName = "ScrollZone";
 	[SerializeField] private float SpellActiveDuration = 0.2f;
 	[SerializeField] private float SpellInactiveDuration = 0.5f;
 
@@ -81,12 +81,12 @@ public class SpellManager : MonoSingleton<SpellManager>, IManagerComponent
 	{
 		if(_gameMng.IsPassingNextTurn == true) return;
 		
-		DetectCardArea();
-
 		if (isScrollDraging)
 		{
 			ScrollDrag();
 		}
+
+		DetectCardArea();
 	}
 
 	private void ScrollDrag()
@@ -100,8 +100,8 @@ public class SpellManager : MonoSingleton<SpellManager>, IManagerComponent
 	private void DetectCardArea()
 	{
 		RaycastHit2D[] hits = Physics2D.RaycastAll(Utils.MousePosition, Vector3.forward);
-		int exceptionLayer = ExceptionLayer;
-		onPlayerScrollZone = Array.Exists(hits, x => x.collider.gameObject.layer == exceptionLayer);
+		int exceptionLayer = LayerMask.NameToLayer("ExceptionLayerName");
+		onPlayerScrollZone = Array.Exists(hits, x => x.collider.gameObject.layer.Equals(exceptionLayer));
 	}
 
 	private string ExtractSingleSpellName(MonoSpellBase initSpell)
@@ -386,12 +386,13 @@ public class SpellManager : MonoSingleton<SpellManager>, IManagerComponent
 		StartCoroutine(ShowSpellSentence(MixSpellSentence(), true));
 	}
 
-	private void ActiveAttack(TileState AttackBy)
+	public void ActiveAttack(TileState AttackBy)
 	{
 		Vector2Int AttackedTile = Vector2Int.zero;
-		for (int XCount = 0; XCount < UsedLowSpell.AttackZone.Count; XCount++)
+		for (int XCount = 0; XCount < UsedLowSpell.MapSize; XCount++)
+
 		{
-			for (int YCount = 0; YCount < UsedLowSpell.AttackZone[XCount].Line.Count; YCount++)
+			for (int YCount = 0; YCount < UsedLowSpell.MapSize; YCount++)
 			{
 				if (UsedLowSpell.AttackZone[XCount].Line[YCount] == true)
 				{
@@ -406,9 +407,9 @@ public class SpellManager : MonoSingleton<SpellManager>, IManagerComponent
 	public void ChangeTileToAttack(LowSpellBase InitLowSpell, TileState AttackBy)
 	{
 		Vector2Int AttackedTilePosition = Vector2Int.zero;
-		for (int XCount = 0; XCount < InitLowSpell.AttackZone.Count; XCount++)
+		for (int XCount = 0; XCount < InitLowSpell.MapSize; XCount++)
 		{
-			for (int YCount = 0; YCount < InitLowSpell.AttackZone[XCount].Line.Count; YCount++)
+			for (int YCount = 0; YCount < InitLowSpell.MapSize; YCount++)
 			{
 				if (InitLowSpell.AttackZone[XCount].Line[YCount] == true)
 				{

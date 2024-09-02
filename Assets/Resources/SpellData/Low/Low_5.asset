@@ -15,13 +15,14 @@ MonoBehaviour:
   SpellType: 1
   SpellName: "\uD398\uD2B8\uB85C\uB214"
   SpellIcon: {fileID: 21300000, guid: bea00bfc4ea3b07458904aeecb7b7fac, type: 3}
-  CollectMP: 0
-  Damage: 0
+  CollectMP: 8
+  Damage: 15
+  MapSize: 7
   AttackZone:
-  - Line: 01010101010101
-  - Line: 01000000000001
+  - Line: 00010101010100
   - Line: 01000101010001
-  - Line: 01000101010001
-  - Line: 01000101010001
-  - Line: 01000000000001
+  - Line: 01010000000101
+  - Line: 00010000000100
+  - Line: 00000101010000
+  - Line: 01010000000101
   - Line: 01010101010101
