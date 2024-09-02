@@ -12,11 +12,14 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 	[SerializeField] private float MoveDuration = 0.5f;
 
 	// Mobility Conditions
+	private bool OnCharacter(int x = 0, int y = 0) =>
+		_mapMng.SettedTiles[new Vector2Int(_player.CurrentTileNumber.x + x, _player.CurrentTileNumber.y + y)].isOnCharacter;
+
 	private bool CanMoveX(int moveTo) =>
-		_player.CurrentTileNumber.x + moveTo >= 0 && _player.CurrentTileNumber.x + moveTo <= 6 && CanMove && !IsMove;
+		_player.CurrentTileNumber.x + moveTo >= 0 && _player.CurrentTileNumber.x + moveTo <= 6 && CanMove && !IsMove && OnCharacter(moveTo, 0) == false;
 
 	private bool CanMoveY(int moveTo) =>
-		_player.CurrentTileNumber.y + moveTo >= 0 && _player.CurrentTileNumber.y + moveTo <= 6 && CanMove && !IsMove;
+		_player.CurrentTileNumber.y + moveTo >= 0 && _player.CurrentTileNumber.y + moveTo <= 6 && CanMove && !IsMove && OnCharacter(0, moveTo) == false;
 
 	public event Action<Vector2> OnMovement;
 

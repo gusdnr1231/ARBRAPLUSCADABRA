@@ -383,25 +383,27 @@ public class SpellManager : MonoSingleton<SpellManager>, IManagerComponent
 
 		_gameMng.UseMoveable();
 		ActiveAttack(TileState.PlayerAttack);
-		StartCoroutine(ShowSpellSentence(MixSpellSentence(), true));
 	}
 
 	public void ActiveAttack(TileState AttackBy)
 	{
 		Vector2Int AttackedTile = Vector2Int.zero;
 		for (int XCount = 0; XCount < UsedLowSpell.MapSize; XCount++)
-
 		{
+			AttackedTile.x = XCount;
 			for (int YCount = 0; YCount < UsedLowSpell.MapSize; YCount++)
 			{
+				AttackedTile.y = YCount;
 				if (UsedLowSpell.AttackZone[XCount].Line[YCount] == true)
 				{
-					Debug.Log($"Attack : {XCount} {YCount}");
+					_mapMng.SettedTiles[AttackedTile].ActiveDamageable(AttackBy, UsedLowSpell.Damage, UsedHighSpell.HighSpellType);
 				}
 			}
 		}
 
 		ResetTileSprite();
+
+		StartCoroutine(ShowSpellSentence(MixSpellSentence(), true));
 	}
 
 	public void ChangeTileToAttack(LowSpellBase InitLowSpell, TileState AttackBy)

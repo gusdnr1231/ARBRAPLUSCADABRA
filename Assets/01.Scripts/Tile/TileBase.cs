@@ -35,7 +35,7 @@ public class TileBase : MonoBehaviour
 
 	private bool isCastingPlayer => M_TileData.InstanceTileState == TileState.PlayerAttack;
     private bool isCastingEnemy => M_TileData.InstanceTileState == TileState.EnemyAttack;
-    private bool isOnCharacter = false;
+    [HideInInspector] public bool isOnCharacter = false;
     private IDamageable OnCharacterDamageable;
 
     public event Action<TileState> OnStateChange;
@@ -83,9 +83,12 @@ public class TileBase : MonoBehaviour
 		}
 	}
 
-    public void ActiveDamageable(int value, HighSpellTypeEnum spellType, bool isAttack = true)
+    public void ActiveDamageable(TileState AttackBy, int value, HighSpellTypeEnum spellType, bool isAttack = true)
     {
         if(isOnCharacter == false) return;
+        if(AttackBy == TileState.PlayerAttack && M_TileData.OnCharacter.Character_Type == CharacterType.Player) return;
+        if(AttackBy == TileState.EnemyAttack && M_TileData.OnCharacter.Character_Type == CharacterType.Monster) return;
+
         if(isAttack == true) OnCharacterDamageable.TakeDamage(value, spellType);
         else if(isAttack == false) OnCharacterDamageable.TakeHeal(value);
     }

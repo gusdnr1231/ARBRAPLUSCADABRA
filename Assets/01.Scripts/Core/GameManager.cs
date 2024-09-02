@@ -11,15 +11,15 @@ public class GameManager : MonoSingleton<GameManager>, IManagerComponent
 	[Header("Player Values")]
 	[Tooltip("턴 시작 시 플레이어가 뽑을 카드 수")]
 	public int PlayerDrawSize = 5;
-	[Tooltip("현재 플레이어 행동력")]
-	public int CurrentMoveable = 0;
+	[Tooltip("현재 플레이어 행동력")] [HideInInspector]public int CurrentMoveable = 0;
 	[Tooltip("최대 플레이어 행동력")]
-	public int MaxMoveable = 999;
+	public int MaxMoveable = 3;
 	[Tooltip("턴이 넘어갈 시 기다리는 시간")]
 	[Range(0.1f, 10f)] public float PassTime = 2.0f;
 
 	[Header("UI Elements")]
 	[SerializeField] private TMPro.TMP_Text TurnTxt;
+	[SerializeField] private TMPro.TMP_Text MoveableTxt;
 
 	private int TurnCount;
 	public bool IsPassingNextTurn { get; private set; } = false;
@@ -68,7 +68,8 @@ public class GameManager : MonoSingleton<GameManager>, IManagerComponent
 
 		StartCoroutine(ShowTurnText());
 
-		CurrentMoveable = 3;
+		CurrentMoveable = MaxMoveable;
+		MoveableTxt.text = $"행동력: {CurrentMoveable}";
 	}
 
 	private void PlayerHandUpdate()
@@ -87,6 +88,7 @@ public class GameManager : MonoSingleton<GameManager>, IManagerComponent
 	public void UseMoveable(int minus = 1) // 행동력 소모 함수
 	{
 		CurrentMoveable = Mathf.Clamp(CurrentMoveable - minus, 0, MaxMoveable);
+		MoveableTxt.text = $"행동력: {CurrentMoveable}";
 		if(CurrentMoveable <= 0) ActiveNextTurn();
 	}
 

@@ -23,6 +23,17 @@ public class EnemyMain : MonoCharacter, IDamageable
 	{
 		EnemyVisual.TryGetComponent(out EnemyAnimator);
 		EnemyVisual.TryGetComponent(out EnemyRenderer);
+
+		MapManager.OnCompleteLoadingMap += SetUpEnemy;
+	}
+
+	public void MoveEnemy()
+	{
+		CurrentTileNumber.x = Random.Range(0, 7);
+		CurrentTileNumber.y = Random.Range(0, 7);
+
+		transform.position = MapManager.Instance.SettedTiles[CurrentTileNumber].ReturnTilePosition();
+		MapManager.Instance.SettedTiles[CurrentTileNumber].SetOnCharacter(this);
 	}
 
 	public void SetUpEnemy()
@@ -31,6 +42,8 @@ public class EnemyMain : MonoCharacter, IDamageable
 		CurrentPatience = MaxPatience;
 
 		UpdatePatience();
+
+		MoveEnemy();
 	}
 
 	public void UpdateTurn()
@@ -52,7 +65,7 @@ public class EnemyMain : MonoCharacter, IDamageable
 
 	public void NoticeAttack()
 	{
-
+		
 	}
 
 	public void ActiveAttack()
@@ -67,6 +80,8 @@ public class EnemyMain : MonoCharacter, IDamageable
 		if (WeaknessTypes.Contains(AttackedType)) CurrentHP = CurrentHP - (damage * 1.5f);
 		else if(StrengthTypes.Contains(AttackedType)) CurrentHP = CurrentHP - (damage * 0.5f);
 		else CurrentHP = CurrentHP - damage;
+
+		Debug.Log("Active Enemy Take Damage: " + CurrentHP);
 
 		if (CurrentHP <= 0) Die();
 	}

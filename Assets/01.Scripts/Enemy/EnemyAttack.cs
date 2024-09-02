@@ -13,4 +13,9 @@ public class EnemyAttack : MonoBehaviour, IEnemyComponent
 	{
 		_enemy = enemy;
 	}
+
+	private List<AttackZoneElement> CaculateAttackZone()
+	{
+		return null;
+	}
 }
