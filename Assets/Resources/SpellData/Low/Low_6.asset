@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1005764bd405ee40991142839ed941c, type: 3}
   m_Name: Low_6
   m_EditorClassIdentifier: 
-  SpellType: 0
-  SpellName: 
-  SpellIcon: {fileID: 0}
+  SpellType: 1
+  SpellName: "\uCE74\uD504\uD0C0"
+  SpellIcon: {fileID: 21300000, guid: c07a2d1237c26a04295bd3d35b04d016, type: 3}
   CollectMP: 0
   Damage: 0
   MapSize: 7
   AttackZone:
   - Line: 00000000000000
-  - Line: 00000000000000
-  - Line: 00000000000000
-  - Line: 00000000000000
-  - Line: 00000000000000
-  - Line: 00000000000000
+  - Line: 00000100010000
+  - Line: 00000101010000
+  - Line: 00010101010100
+  - Line: 00000101010000
+  - Line: 00000100010000
   - Line: 00000000000000

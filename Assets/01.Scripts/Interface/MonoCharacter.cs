@@ -18,5 +18,5 @@ public class MonoCharacter : MonoBehaviour
     public CharacterType Character_Type;
     [Range(1, 1000)]public int MaxHP = 10;
     public float CurrentHP = 0;
-	[HideInInspector] public Vector2Int CurrentTileNumber;
+	public Vector2Int CurrentTileNumber;
 }

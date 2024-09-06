@@ -35,7 +35,7 @@ public class TileBase : MonoBehaviour
 
 	private bool isCastingPlayer => M_TileData.InstanceTileState == TileState.PlayerAttack;
     private bool isCastingEnemy => M_TileData.InstanceTileState == TileState.EnemyAttack;
-    [HideInInspector] public bool isOnCharacter = false;
+    [HideInInspector] public bool isOnCharacter => M_TileData.OnCharacter != null;
     private IDamageable OnCharacterDamageable;
 
     public event Action<TileState> OnStateChange;
@@ -75,19 +75,28 @@ public class TileBase : MonoBehaviour
 	{
 		M_TileData.OnCharacter = character;
 
-        if(M_TileData.OnCharacter == null) OnStateChange?.Invoke(TileState.None);
-		else if(M_TileData.OnCharacter != null)
+        Debug.Log($"[Tile Number : {M_TileData.TilePositionX} {M_TileData.TilePositionY}]\n[On Character : {isOnCharacter}]");
+        
+        if(isOnCharacter == false)
+        {
+			OnStateChange?.Invoke(TileState.None);
+            OnCharacterDamageable = null;
+		}
+		else if(isOnCharacter == true)
         {
 			OnStateChange?.Invoke((TileState)character.Character_Type);
-			isOnCharacter = M_TileData.OnCharacter.TryGetComponent(out OnCharacterDamageable);
+            M_TileData.OnCharacter.TryGetComponent(out OnCharacterDamageable);
 		}
 	}
 
     public void ActiveDamageable(TileState AttackBy, int value, HighSpellTypeEnum spellType, bool isAttack = true)
     {
         if(isOnCharacter == false) return;
-        if(AttackBy == TileState.PlayerAttack && M_TileData.OnCharacter.Character_Type == CharacterType.Player) return;
-        if(AttackBy == TileState.EnemyAttack && M_TileData.OnCharacter.Character_Type == CharacterType.Monster) return;
+        else if(isOnCharacter == true)
+        {
+            if(AttackBy == TileState.PlayerAttack && M_TileData.OnCharacter.Character_Type == CharacterType.Player) return;
+            if(AttackBy == TileState.EnemyAttack && M_TileData.OnCharacter.Character_Type == CharacterType.Monster) return;
+        }
 
         if(isAttack == true) OnCharacterDamageable.TakeDamage(value, spellType);
         else if(isAttack == false) OnCharacterDamageable.TakeHeal(value);
@@ -95,11 +104,15 @@ public class TileBase : MonoBehaviour
 
     public void ResetTileRender()
     {
-		if (M_TileData.OnCharacter == null) UpdateTileState(TileState.None);
+		if (M_TileData.OnCharacter == null)
+        {
+			UpdateTileState(TileState.None);
+			OnCharacterDamageable = null;
+		}
 		else if (M_TileData.OnCharacter != null)
 		{
 			UpdateTileState((TileState)M_TileData.OnCharacter.Character_Type);
-			isOnCharacter = M_TileData.OnCharacter.TryGetComponent(out OnCharacterDamageable);
+			M_TileData.OnCharacter.TryGetComponent(out OnCharacterDamageable);
 		}
 	}
 }

@@ -72,7 +72,7 @@ public class SpellManager : MonoSingleton<SpellManager>, IManagerComponent
 
 		_gameMng = _mngs.GetManager<GameManager>();
 		_gameMng.OnUpdatePlayerHand += DrawScrollPair;
-		_gameMng.EndTurn += CompleteClear;
+		_gameMng.OnEndTurn += CompleteClear;
 
 		ManaOverlapFigure = 0;
 	}
@@ -382,38 +382,41 @@ public class SpellManager : MonoSingleton<SpellManager>, IManagerComponent
 		Player.GetCompo<PlayerMovement>().CanCasting = false;
 
 		_gameMng.UseMoveable();
-		ActiveAttack(TileState.PlayerAttack);
+		ActiveAttack(UsedLowSpell.AttackZone, TileState.PlayerAttack);
 	}
 
-	public void ActiveAttack(TileState AttackBy)
+	public void ActiveAttack(List<AttackZoneElement> AttackZone, TileState AttackBy)
 	{
 		Vector2Int AttackedTile = Vector2Int.zero;
-		for (int XCount = 0; XCount < UsedLowSpell.MapSize; XCount++)
+		for (int XCount = 0; XCount < _mapMng.MapSize; XCount++)
 		{
 			AttackedTile.x = XCount;
-			for (int YCount = 0; YCount < UsedLowSpell.MapSize; YCount++)
+			for (int YCount = 0; YCount < _mapMng.MapSize; YCount++)
 			{
 				AttackedTile.y = YCount;
-				if (UsedLowSpell.AttackZone[XCount].Line[YCount] == true)
+				if (AttackZone[XCount].Line[YCount] == true)
 				{
+					if(AttackBy == TileState.PlayerAttack)
 					_mapMng.SettedTiles[AttackedTile].ActiveDamageable(AttackBy, UsedLowSpell.Damage, UsedHighSpell.HighSpellType);
+					if(AttackBy == TileState.EnemyAttack)
+					_mapMng.SettedTiles[AttackedTile].ActiveDamageable(AttackBy, 1, HighSpellTypeEnum.Normal);
 				}
 			}
 		}
 
 		ResetTileSprite();
 
-		StartCoroutine(ShowSpellSentence(MixSpellSentence(), true));
+		if (AttackBy == TileState.PlayerAttack) StartCoroutine(ShowSpellSentence(MixSpellSentence(), true));
 	}
 
-	public void ChangeTileToAttack(LowSpellBase InitLowSpell, TileState AttackBy)
+	public void ChangeTileToAttack(List<AttackZoneElement> AttackZone, TileState AttackBy)
 	{
 		Vector2Int AttackedTilePosition = Vector2Int.zero;
-		for (int XCount = 0; XCount < InitLowSpell.MapSize; XCount++)
+		for (int XCount = 0; XCount < _mapMng.MapSize; XCount++)
 		{
-			for (int YCount = 0; YCount < InitLowSpell.MapSize; YCount++)
+			for (int YCount = 0; YCount < _mapMng.MapSize; YCount++)
 			{
-				if (InitLowSpell.AttackZone[XCount].Line[YCount] == true)
+				if (AttackZone[XCount].Line[YCount] == true)
 				{
 					AttackedTilePosition.Set(XCount, YCount);
 					_mapMng.SettedTiles[AttackedTilePosition].UpdateTileState(AttackBy);
@@ -421,6 +424,22 @@ public class SpellManager : MonoSingleton<SpellManager>, IManagerComponent
 			}
 		}
 	}
+	public void ChangeTileToAttack(LowSpellBase AttackData, TileState AttackBy)
+	{
+		Vector2Int AttackedTilePosition = Vector2Int.zero;
+		for (int XCount = 0; XCount < _mapMng.MapSize; XCount++)
+		{
+			for (int YCount = 0; YCount < _mapMng.MapSize; YCount++)
+			{
+				if (AttackData.AttackZone[XCount].Line[YCount] == true)
+				{
+					AttackedTilePosition.Set(XCount, YCount);
+					_mapMng.SettedTiles[AttackedTilePosition].UpdateTileState(AttackBy);
+				}
+			}
+		}
+	}
+
 
 	private void ResetTileSprite()
 	{

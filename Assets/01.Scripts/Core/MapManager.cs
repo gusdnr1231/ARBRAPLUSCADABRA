@@ -11,7 +11,7 @@ public class MapManager : MonoSingleton<MapManager>, IManagerComponent
 	[Header("Tile Values")]
     [SerializeField] private TileBase TileObject;
 	[SerializeField] private Vector2 StartPosition;
-	[SerializeField] private int MapSize = 7;
+	[SerializeField] public int MapSize = 7;
 
 	public Dictionary<Vector2Int, TileBase> SettedTiles = new Dictionary<Vector2Int, TileBase>();
 	public static Action OnCompleteLoadingMap;

@@ -25,7 +25,8 @@ public class GameManager : MonoSingleton<GameManager>, IManagerComponent
 	public bool IsPassingNextTurn { get; private set; } = false;
 
 	public event Action<int> OnUpdatePlayerHand;
-	public event Action EndTurn;
+	public event Action OnStartTurn;
+	public event Action OnEndTurn;
 
 	private Managers _mngs;
 	private SpellManager _spellMng;
@@ -57,6 +58,8 @@ public class GameManager : MonoSingleton<GameManager>, IManagerComponent
 	{
 		IsPassingNextTurn = false;
 
+		OnStartTurn?.Invoke();
+
 		UpdateValues();
 
 		PlayerHandUpdate();
@@ -79,7 +82,7 @@ public class GameManager : MonoSingleton<GameManager>, IManagerComponent
 
 	public void ActiveNextTurn() // 턴 진행 함수
 	{
-		EndTurn?.Invoke();
+		OnEndTurn?.Invoke();
 		IsPassingNextTurn = true;
 
 		Invoke(nameof(StartTurn), PassTime);
