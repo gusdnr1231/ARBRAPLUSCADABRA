@@ -1,2 +1,4 @@
 # ARBRAPLUSCADABRA
- Game Programming Soloing Project
+3rd 개인 프로젝트
+
+기간: 
