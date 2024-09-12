@@ -80,13 +80,15 @@ public class EnemyMain : MonoCharacter, IDamageable
 
 	public void NoticeAttack()
 	{
-		_spellMng.ChangeTileToAttack(_enemyAttack.CalculateAttackRange(), TileState.EnemyAttack);
+		Debug.Log("Notice Enemy AttackZoen");
+		//_spellMng.ChangeTileToAttack(_enemyAttack.CalculateAttackRange(), TileState.EnemyAttack);
 	}
 
 	public void ActiveAttack()
 	{
 		CurrentPatience = MaxPatience;
-		_spellMng.ActiveAttack(_enemyAttack.CalculateAttackRange(), TileState.EnemyAttack);
+		Debug.Log("Active Enemy AttackZoen");
+		//_spellMng.ActiveAttack(_enemyAttack.CalculateAttackRange(), TileState.EnemyAttack);
 	}
 
 	public void TakeDamage(float damage, HighSpellTypeEnum AttackedType)
