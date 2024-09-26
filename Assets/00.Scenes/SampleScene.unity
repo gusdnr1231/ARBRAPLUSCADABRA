@@ -315,8 +315,8 @@ Transform:
   m_GameObject: {fileID: 395299095}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 2.56, y: -0.02, z: 0}
+  m_LocalScale: {x: 4, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1412054975}
@@ -1957,8 +1957,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1412054975}
-  - component: {fileID: 1412054976}
-  - component: {fileID: 1412054977}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -1983,40 +1981,6 @@ Transform:
   - {fileID: 459728779}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1412054976
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1412054973}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d36cf8d11212f3941a2f83a9382702c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Character_Type: 2
-  MaxHP: 20
-  CurrentHP: 0
-  CurrentTileNumber: {x: 0, y: 0}
-  WeaknessTypes: 0100000002000000
-  StrengthTypes: 04000000
-  MaxPatience: 3
-  EnemyVisual: {fileID: 395299096}
-  PatienceTxt: {fileID: 459728781}
---- !u!114 &1412054977
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1412054973}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0288dfc6cce1a143b30f979d5b5714e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AttackData: {fileID: 11400000, guid: 44ae53d5ee1507948bd1dcd2dcaf9a8e, type: 2}
 --- !u!1 &1476610941
 GameObject:
   m_ObjectHideFlags: 0

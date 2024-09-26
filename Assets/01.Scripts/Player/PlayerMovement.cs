@@ -52,6 +52,8 @@ public class PlayerMovement : MonoBehaviour, IPlayerComponent
 	private void Update()
 	{
 		if(_gameMng.IsPassingNextTurn == false && _mapMng.isActiveMap == true) HandleInput();
+
+		if (Input.GetKeyDown(KeyCode.Space)) _player.mngs.GetManager<SpellManager>().ShowEnemyAttackZone();
 	}
 
 	private void SetUpPlayerMovement()

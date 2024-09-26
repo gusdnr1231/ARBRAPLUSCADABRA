@@ -55,7 +55,7 @@ public class EnemyMain : MonoCharacter, IDamageable
 		CurrentHP = MaxHP;
 		CurrentPatience = MaxPatience;
 
-		UpdatePatience();
+		UpdatePatience(true);
 
 		MoveEnemy();
 	}
@@ -63,12 +63,12 @@ public class EnemyMain : MonoCharacter, IDamageable
 	public void UpdateTurn()
 	{
 
-		UpdatePatience();
+		UpdatePatience(false);
 	}
 
-	public void UpdatePatience()
+	public void UpdatePatience(bool isFirst)
 	{
-		CurrentPatience = CurrentPatience - 1;
+		if (isFirst == false) CurrentPatience = CurrentPatience - 1;
 
 		PatienceTxt.text = CurrentPatience.ToString();
 		if (CurrentPatience <= 1) PatienceTxt.color = Color.red;
@@ -80,14 +80,14 @@ public class EnemyMain : MonoCharacter, IDamageable
 
 	public void NoticeAttack()
 	{
-		Debug.Log("Notice Enemy AttackZoen");
-		//_spellMng.ChangeTileToAttack(_enemyAttack.CalculateAttackRange(), TileState.EnemyAttack);
+		Debug.Log("Notice Enemy AttackZone");
+		_spellMng.AddEnemyAttackZone(_enemyAttack.CalculateAttackRange());
 	}
 
 	public void ActiveAttack()
 	{
 		CurrentPatience = MaxPatience;
-		Debug.Log("Active Enemy AttackZoen");
+		Debug.Log("Active Enemy AttackZone");
 		//_spellMng.ActiveAttack(_enemyAttack.CalculateAttackRange(), TileState.EnemyAttack);
 	}
 

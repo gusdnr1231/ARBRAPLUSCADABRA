@@ -71,6 +71,7 @@ public class SpellManager : MonoSingleton<SpellManager>, IManagerComponent
 		_mapMng = _mngs.GetManager<MapManager>();
 
 		_gameMng = _mngs.GetManager<GameManager>();
+		_gameMng.OnStartTurn += CheckAcitveEnemyAttack;
 		_gameMng.OnUpdatePlayerHand += DrawScrollPair;
 		_gameMng.OnEndTurn += CompleteClear;
 
@@ -424,6 +425,7 @@ public class SpellManager : MonoSingleton<SpellManager>, IManagerComponent
 			}
 		}
 	}
+
 	public void ChangeTileToAttack(LowSpellBase AttackData, TileState AttackBy)
 	{
 		Vector2Int AttackedTilePosition = Vector2Int.zero;
@@ -440,8 +442,7 @@ public class SpellManager : MonoSingleton<SpellManager>, IManagerComponent
 		}
 	}
 
-
-	private void ResetTileSprite()
+	public void ResetTileSprite()
 	{
 		foreach (TileBase TileData in _mapMng.SettedTiles.Values)
 		{
@@ -478,5 +479,46 @@ public class SpellManager : MonoSingleton<SpellManager>, IManagerComponent
 	}
 
 	#endregion
+
+	private List<AttackZoneElement> EnemyAttackZone;
+	private bool IsSettedEnemyAttack = false;
+
+	public void AddEnemyAttackZone(List<AttackZoneElement> CastingAttackZone)
+	{
+		for (int XCount = 0; XCount < _mapMng.MapSize; XCount++)
+		{
+			for (int YCount = 0; YCount < _mapMng.MapSize; YCount++)
+			{
+				if (EnemyAttackZone[XCount].Line[YCount] == false && CastingAttackZone[XCount].Line[YCount] == true)
+					EnemyAttackZone[XCount].Line[YCount] = true;
+			}
+		}
+
+		IsSettedEnemyAttack = true;
+	}
+
+	public void ShowEnemyAttackZone() => ChangeTileToAttack(EnemyAttackZone, TileState.EnemyAttack);
+
+	public void CheckAcitveEnemyAttack()
+	{
+		if(IsSettedEnemyAttack == true)
+		{
+			ActiveAttack(EnemyAttackZone, TileState.EnemyAttack);
+			IsSettedEnemyAttack = false;
+		}
+		if(IsSettedEnemyAttack == false) ResetEnemyAttackZone();
+	}
+
+	public void ResetEnemyAttackZone()
+	{
+		if(EnemyAttackZone == null) EnemyAttackZone = new List<AttackZoneElement>();
+		else EnemyAttackZone.Clear();
+		for (int count = 0; count <  _mapMng.MapSize; count++)
+		{
+			AttackZoneElement newAttackElement = new AttackZoneElement();
+			newAttackElement.Line = new List<bool>(7);
+			EnemyAttackZone[count] = newAttackElement;
+		}
+	}
 
 }
