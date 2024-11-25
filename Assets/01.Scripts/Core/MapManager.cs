@@ -44,7 +44,7 @@ public class MapManager : MonoSingleton<MapManager>, IManagerComponent
 		{
 			for (int countY = 0; countY < MapSize; countY++)
 			{
-				TilePosition = new Vector2(StartPosition.x - countX + countY, StartPosition.y - (0.5f * countX) - (0.5f * countY));
+				TilePosition = new Vector2(StartPosition.x - countX + countY, StartPosition.y - (0.5f * countX) - (0.75f * countY));
 				TileBase NewTile = Instantiate(TileObject, TilePosition, Quaternion.identity);
 
 				TileArrayNumber = new Vector2Int(countX, countY);

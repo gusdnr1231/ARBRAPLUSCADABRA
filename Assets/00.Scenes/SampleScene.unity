@@ -1376,7 +1376,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TileContainer: {fileID: 1092924878}
   TileObject: {fileID: 8332547858181540487, guid: 890d19a22a89c914cbdc9577bdfdc99a, type: 3}
-  StartPosition: {x: 0, y: 3}
+  StartPosition: {x: -4, y: 0.5}
   MapSize: 7
 --- !u!1 &935430913
 GameObject:
